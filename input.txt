@@ -1,0 +1,115 @@
+Intro, 1, Fishy clicks ambulance. and Turtle clicks elephant., Intro-1-1.wav, Intro-1-2.wav, #slide should also add sentence “See…” and audio Intro-Different.wav #
+Intro, 2, Turtle clicks orange. and Fishy clicks orange., Intro-2-1.wav, Intro-2-2.wav, #slide should also add sentence “See…” and audio Intro-Same.wav #
+Intro, 3, Turtle clicks elephant. and #no sentence#, Intro-3.wav, #no audio#, #slide should also add sentence “See…” and audio Intro-Silly.wav #
+1-6, 1, ano6, Fishy clicks an egg. and Turtle clicks another egg., 56-1.wav, 1-3-13-2.wav, 6, Left, Orange, 3
+1-6, 2, a6, Turtle clicks an owl. and Fishy clicks an owl., 1-3-7-1.wav, 1-3-7-2.wav, 6, Left, Ant, 6
+1-6, 3, that6, Turtle clicks an ant. and Fishy clicks that ant., 28-1.wav, 1-3-34-2.wav, 6, Right, Octopus, 6
+1-6, 4, the6, Fishy clicks an apple. and Turtle clicks the apple., 33-1.wav, 1-3-16-2.wav, 6, Right, Owl, 6
+1-6, 5, diff6, Turtle clicks an ape. and Fishy clicks a different ape., 5-1.wav, 5-2.wav, 6, Left, Acorn, 6
+1-6, 6, *control, Turtle clicks an orange. and #no sentence but there should be acorn in picture#., 6.wav, #no audio#, 3, Right, Icecream, 6
+1-6, 7, a6, Turtle clicks an egg. and Fishy clicks an egg., 1-3-19-1.wav, 1-3-19-2.wav, 6, Right, Owl, 3
+1-6, 8, same3, Turtle clicks an ambulance. and Fishy clicks the same ambulance., 8-1.wav, 8-2. wav, 3, Right, Apple, 6
+1-6, 9, the3, Turtle clicks an octopus. and Fishy clicks the octopus., 9-1.wav, 9-2.wav, 3, Left, Anchor, 6
+1-6, 10, *the, Fishy clicks the ant. and #no sentence#., 10.wav, #no audio#, 6, Left, Ape, 6
+1-6, 11, share6	, Fishy clicks an ogre. and Turtle shares the ogre with Fishy., 1-3-4-1.wav, 11-2.wav, 6, Right, Ant, 3
+1-6, 12, diff3, Fishy clicks an umbrella. and Turtle clicks a different umbrella., 12-1.wav, 12-2.wav, 3, Right, Ambulance, 3
+1-6, 13, ano3, Fishy clicks an icecream. and Turtle clicks another icecream., 1-3-1-1.wav, 1-3-1-2.wav, 3, Left, Ant, 3
+1-6, 14, same6, Fishy clicks an orange. and Turtle clicks the same orange., 14-1.wav, 14-2.wav, 6, Right, Apple, 6
+1-6, 15, *that, Turtle clicks that octopus. and #no sentence#., 15.wav, #no audio#, 6, Right, Elephant, 6
+1-6, 16, the3, Fishy clicks an ogre. and Turtle clicks the ogre., 1-3-4-1.wav, 1-3-4-2.wav, 3, Right, Ambulance, 3
+1-6, 17, it6, Fishy clicks an owl. and Turtle clicks it., 37-1.wav, 55-2.wav, 6, Right, Orange, 3
+1-6, 18, that3, Turtle clicks an acorn. and Fishy clicks that acorn., 20-1.wav, 18-2.wav, 3, Left, Orange, 6
+1-6, 19, a3, Turtle clicks an umbrella. and Fishy clicks an umbrella., 1-3-2-1.wav, 1-3-2-2.wav, 3, Left, Apple, 6
+1-6, 20, ano6, Turtle clicks an acorn. and Fishy clicks another acorn., 20-1.wav, 20-2.wav, 6, Left, Owl, 6
+1-6, 21, *that, Turtle clicks that anchor. and #no sentence#., 21.wav, #no audio#, 3, Left, Apple, 6
+1-6, 22, share3, Turtle clicks an apple. and Fishy shares the apple with Turtle., 22-1.wav, 22-2.wav, 3, Left, Anchor, 3
+1-6, 23, it6, Turtle clicks an acorn. and Fishy clicks it., 20-1.wav, 23-2.wav, 6, Right, Ambulance, 6
+1-6, 24, same3, Fishy clicks an eggplant. and Turtle clicks the same eggplant., 52-1.wav, 24-2.wav, 3, Left, Ape, 3
+1-6, 25, *control, Fishy clicks an acorn. and #no sentence but picture should show elephant#., 25.wav, #no audio#, 3, Right, Egg, 6
+1-6, 26, the6, Fishy clicks an ambulance. and Turtle clicks the ambulance., 45-1.wav, 26-2.wav, 6, Left, Egg, 3
+1-6, 27, diff6, Turtle clicks an anchor. and Fishy clicks a different anchor., 27-1.wav, 27-2.wav, 6, Left, Eggplant, 3
+1-6, 28, ano3, Turtle clicks an ant. and Fishy clicks another ant., 28-1.wav, 28-2.wav, 3, Right, Icecream, 6
+1-6, 29,  *the, Fishy clicks the umbrella. and #no sentence#., 29.wav, #no audio#, 6, Right, Acorn, 3
+1-6, 30, share6, Fishy clicks an elephant. and Turtle shares the elephant with Fishy., 46-1.wav, 30-2.wav, 6, Left, Eggplant, 6
+1-6, 31, it3, Turtle clicks an ant. and Fishy clicks it., 28-1.wav, 23-2.wav, 3, Left, Elephant, 6
+1-6, 32, *that, Fishy clicks that ogre. and #no sentence#., 32.wav, #no audio#, 6, Left, Umbrella, 3
+1-6, 33, a3, Fishy clicks an apple. and Turtle clicks an apple., 33-1.wav, 33-2.wav, 3, Right, Acorn, 6
+1-6, 34, that3, Turtle clicks an orange. and Fishy clicks that orange., 36-1.wav, 1-3-3-2.wav, 3, Left, Ant, 3
+1-6, 35, *control, Fishy clicks an egg. and #no sentence but picture should show ambulance#., 35.wav, #no audio#, 6, Right, Ogre, 3
+1-6, 36, ano6, Turtle clicks an orange. and Fishy clicks another orange., 36-1.wav, 36-2.wav, 6, Left, Icecream, 3
+1-6, 37, diff3, Fishy clicks an owl. and Turtle clicks a different owl., 37-1.wav, 37-2.wav, 3, Left, Octopus, 6
+1-6, 38, *the, Turtle clicks the elephant. and #no sentence#., 38.wav, #no audio#, 3, Left, Owl, 6
+1-6, 39, same6, Turtle clicks an octopus. and Fishy clicks the same octopus., 9-1.wav, 39-2.wav, 6, Left, Ambulance, 3
+1-6, 40, it3, Turtle clicks an ogre. and Fishy clicks it., 40-1.wav,23-2.wav, 3, Left, Eggplant, 3
+1-6, 41, that6, Fishy clicks an icecream. and Turtle clicks that icecream., 1-3-1-1.wav, 41-2.wav, 6, Right, Ape, 3
+1-6, 42, ano3, Fishy clicks an ape. and Turtle clicks another ape., 42-1.wav, 42-2.wav, 3, Right, Octopus, 6
+1-6, 43, *that, Fishy clicks that icecream. and #no sentence#., 43.wav, #no audio#, 3, Right, Eggplant, 3
+1-6, 44, the3, Turtle clicks an anchor. and Fishy clicks the anchor., 27-1.wav, 44-2.wav, 3, Right, Ogre, 3
+1-6, 45, a3, Fishy clicks an ambulance. and Turtle clicks an ambulance., 45-1.wav, 45-2.wav, 3, Left, Umbrella, 3
+1-6, 46, it6, Fishy clicks an elephant. and Turtle clicks it., 46-1.wav, 55-2.wav, 6, Right, Ape, 3
+1-6, 47, *control, Turtle clicks an owl. and #no sentence but picture should show anchor#., 47.wav, #no audio#, 6, Left, Umbrella, 3
+1-6, 48, the6, Turtle clicks an umbrella. and Fishy clicks the umbrella., 1-3-2-1.wav, 48-2.wav, 6, Left, Elephant, 6
+1-6, 49, diff6, Turtle clicks an eggplant. and Fishy clicks a different eggplant., 49-1.wav, 49-2.wav, 6, Right, Umbrella, 3
+1-6, 50, that3, Fishy clicks an owl. and Turtle clicks that owl., 37-1.wav, 50-2.wav, 3, Right, Icecream, 3
+1-6, 51, share3, Turtle clicks an octopus. and Fishy shares the octopus with Turtle., 9-1.wav, 51-2.wav, 3, Right, Egg, 6
+1-6, 52, a6, Fishy clicks an eggplant. and Turtle clicks an eggplant., 52-1.wav, 52-2.wav, 6, Right, Anchor, 3
+1-6, 53, *the, Turtle clicks the orange. and #no sentence#., 53.wav, #no audio#, 3, Right, Elephant, 3
+1-6, 54, that6, Fishy clicks an ape. and Turtle clicks that ape., 42-1.wav, 54-2.wav, 6, Left, Anchor, 6
+1-6, 55, it3, Fishy clicks an eggplant. and Turtle clicks it.,  52-1.wav, 55-2.wav, 3, Left, Ogre, 6
+1-6, 56, diff3, Fishy clicks an egg. and Turtle clicks a different egg., 56-1.wav, 56-2.wav, 3, Right, Acorn, 3
+1-3, 1, ano3, Fishy clicks an icecream. and Turtle clicks another icecream., 1-3-1-1.wav, 1-3-1-2.wav, 3, Right, Ant, 3
+1-3, 2, a3, Turtle clicks an umbrella. and Fishy clicks an umbrella., 1-3-2-1.wav, 1-3-2-2.wav, 3, Right, Apple, 6
+1-3, 3, that6, Turtle clicks an orange. and Fishy clicks that orange., 36-1.wav, 1-3-3-2.wav, 3, Right, Ant, 3
+1-3, 4, the3, Fishy clicks an ogre. and Turtle clicks the ogre., 1-3-4-1.wav, 1-3-4-2.wav, 3, Left, Ambulance, 3
+1-3, 5, diff6, Turtle clicks an ape. and Fishy clicks a different ape., 5-1.wav, 5-2.wav, 6, Right, Acorn, 6
+1-3, 6, *control, Turtle clicks an orange. and #no sentence but there should be acorn in picture#., 6.wav, #no audio#, 3, Left, Icecream, 6
+1-3, 7, a6, Turtle clicks an owl. and Fishy clicks an owl., 1-3-7-1.wav, 1-3-7-2.wav, 6, Right, Ant, 6
+1-3, 8, same3, Turtle clicks an ambulance. and Fishy clicks the same ambulance., 8-1.wav, 8-2. wav, 3, Left, Apple, 6
+1-3, 9, the3, Turtle clicks an octopus. and Fishy clicks the octopus., 9-1.wav, 9-2.wav, 3, Right, Anchor, 6
+1-3, 10, *the, Fishy clicks the ant. and #no sentence#., 10.wav, #no audio#, 6, Right, Ape, 6
+1-3, 11, share6	, Fishy clicks an ogre. and Turtle shares the ogre with Fishy., 1-3-4-1.wav, 11-2.wav, 6, Left, Ant, 3
+1-3, 12, diff3, Fishy clicks an umbrella. and Turtle clicks a different umbrella., 12-1.wav, 12-2.wav, 3, Left, Ambulance, 3
+1-3, 13, ano6, Fishy clicks an egg. and Turtle clicks another egg., 56-1.wav, 1-3-13-2.wav, 6, Right, Orange, 3
+1-3, 14, same6, Fishy clicks an orange. and Turtle clicks the same orange., 14-1.wav, 14-2.wav, 6, Left, Apple, 6
+1-3, 15, *that, Turtle clicks that octopus. and #no sentence#., 15.wav, #no audio#, 6, Left, Elephant, 6
+1-3, 16, the6, Fishy clicks an apple. and Turtle clicks the apple., 33-1.wav, 1-3-16-2.wav, 6, Left, Owl, 6
+1-3, 17, it6, Fishy clicks an owl. and Turtle clicks it., 37-1.wav, 55-2.wav, 6, Left, Orange, 3
+1-3, 18, that3, Turtle clicks an acorn. and Fishy clicks that acorn., 20-1.wav, 18-2.wav, 3, Right, Orange, 6
+1-3, 19, a6, Turtle clicks an egg. and Fishy clicks an egg., 1-3-19-1.wav, 1-3-19-2.wav, 6, Left, Owl, 3
+1-3, 20, ano6, Turtle clicks an acorn. and Fishy clicks another acorn., 20-1.wav, 20-2.wav, 6, Right, Owl, 6
+1-3, 21, *that, Turtle clicks that anchor. and #no sentence#., 21.wav, #no audio#, 3, Right, Apple, 6
+1-3, 22, share3, Turtle clicks an apple. and Fishy shares the apple with Turtle., 22-1.wav, 22-2.wav, 3, Right, Anchor, 3
+1-3, 23, it6, Turtle clicks an acorn. and Fishy clicks it., 20-1.wav, 23-2.wav, 6, Left, Ambulance, 6
+1-3, 24, same3, Fishy clicks an eggplant. and Turtle clicks the same eggplant., 52-1.wav, 24-2.wav, 3, Right, Ape, 3
+1-3, 25, *control, Fishy clicks an acorn. and #no sentence but picture should show elephant#., 25.wav, #no audio#, 3, Left, Egg, 6
+1-3, 26, the6, Fishy clicks an ambulance. and Turtle clicks the ambulance., 45-1.wav, 26-2.wav, 6, Right, Egg, 3
+1-3, 27, diff6, Turtle clicks an anchor. and Fishy clicks a different anchor., 27-1.wav, 27-2.wav, 6, Right, Eggplant, 3
+1-3, 28, ano3, Turtle clicks an ant. and Fishy clicks another ant., 28-1.wav, 28-2.wav, 3, Left, Icecream, 6
+1-3, 29,  *the, Fishy clicks the umbrella. and #no sentence#., 29.wav, #no audio#, 6, Left, Acorn, 3
+1-3, 30, share6, Fishy clicks an elephant. and Turtle shares the elephant with Fishy., 46-1.wav, 30-2.wav, 6, Right, Eggplant, 6
+1-3, 31, it3, Turtle clicks an ant. and Fishy clicks it., 28-1.wav, 23-2.wav, 3, Right, Elephant, 6
+1-3, 32, *that, Fishy clicks that ogre. and #no sentence#., 32.wav, #no audio#, 6, Right, Umbrella, 3
+1-3, 33, a3, Fishy clicks an apple. and Turtle clicks an apple., 33-1.wav, 33-2.wav, 3, Left, Acorn, 6
+1-3, 34, that6, Turtle clicks an ant. and Fishy clicks that ant., 28-1.wav, 1-3-34-2.wav, 6, Left, Octopus, 6
+1-3, 35, *control, Fishy clicks an egg. and #no sentence but picture should show ambulance#., 35.wav, #no audio#, 6, Left, Ogre, 3
+1-3, 36, ano6, Turtle clicks an orange. and Fishy clicks another orange., 36-1.wav, 36-2.wav, 6, Right, Icecream, 3
+1-3, 37, diff3, Fishy clicks an owl. and Turtle clicks a different owl., 37-1.wav, 37-2.wav, 3, Right, Octopus, 6
+1-3, 38, *the, Turtle clicks the elephant. and #no sentence#., 38.wav, #no audio#, 3, Right, Owl, 6
+1-3, 39, same6, Turtle clicks an octopus. and Fishy clicks the same octopus., 9-1.wav, 39-2.wav, 6, Right, Ambulance, 3
+1-3, 40, it3, Turtle clicks an ogre. and Fishy clicks it., 40-1.wav,23-2.wav, 3, Right, Eggplant, 3
+1-3, 41, that6, Fishy clicks an icecream. and Turtle clicks that icecream., 1-3-1-1.wav, 41-2.wav, 6, Left, Ape, 3
+1-3, 42, ano3, Fishy clicks an ape. and Turtle clicks another ape., 42-1.wav, 42-2.wav, 3, Left, Octopus, 6
+1-3, 43, *that, Fishy clicks that icecream. and #no sentence#., 43.wav, #no audio#, 3, Left, Eggplant, 3
+1-3, 44, the3, Turtle clicks an anchor. and Fishy clicks the anchor., 27-1.wav, 44-2.wav, 3, Left, Ogre, 3
+1-3, 45, a3, Fishy clicks an ambulance. and Turtle clicks an ambulance., 45-1.wav, 45-2.wav, 3, Right, Umbrella, 3
+1-3, 46, it6, Fishy clicks an elephant. and Turtle clicks it., 46-1.wav, 55-2.wav, 6, Left, Ape, 3
+1-3, 47, *control, Turtle clicks an owl. and #no sentence but picture should show anchor#., 47.wav, #no audio#, 6, Left, Umbrella, 3
+1-3, 48, the6, Turtle clicks an umbrella. and Fishy clicks the umbrella., 1-3-2-1.wav, 48-2.wav, 6, Right, Elephant, 6
+1-3, 49, diff6, Turtle clicks an eggplant. and Fishy clicks a different eggplant., 49-1.wav, 49-2.wav, 6, Left, Umbrella, 3
+1-3, 50, that3, Fishy clicks an owl. and Turtle clicks that owl., 37-1.wav, 50-2.wav, 3, Left, Icecream, 3
+1-3, 51, share3, Turtle clicks an octopus. and Fishy shares the octopus with Turtle., 9-1.wav, 51-2.wav, 3, Left, Egg, 6
+1-3, 52, a6, Fishy clicks an eggplant. and Turtle clicks an eggplant., 52-1.wav, 52-2.wav, 6, Left, Anchor, 3
+1-3, 53, *the, Turtle clicks the orange. and #no sentence#., 53.wav, #no audio#, 3, Left, Elephant, 3
+1-3, 54, that6, Fishy clicks an ape. and Turtle clicks that ape., 42-1.wav, 54-2.wav, 6, Right, Anchor, 6
+1-3, 55, it3, Fishy clicks an eggplant. and Turtle clicks it.,  52-1.wav, 55-2.wav, 3, Right, Ogre, 6
+1-3, 56, diff3, Fishy clicks an egg. and Turtle clicks a different egg., 56-1.wav, 56-2.wav, 3, Left, Acorn, 3

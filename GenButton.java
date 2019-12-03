@@ -15,6 +15,7 @@ public class GenButton extends JButton implements MouseListener {
     private String type,sentence1,sentence2,name;//What kind of button it is --Target or Distractor
     private boolean correct, clicked;//whether this button with image is correct or not
     private int numClicks = 0;
+    public String clickRecord = "0";
     private String audioFileName1, audio2;
     private Font font = new Font("Comic Sans MS",0,40);
     private Font fontBig = new Font("Comic Sans MS",0,60);
@@ -106,6 +107,9 @@ public class GenButton extends JButton implements MouseListener {
                     playSound(audio2);
                 }
             }
+        }
+        if(type.equals("test")){
+            System.out.println("Test Button clicked");
         }
     }
 

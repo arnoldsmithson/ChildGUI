@@ -80,8 +80,20 @@ public class UpdatedSlide extends JPanel implements MouseListener, KeyListener {
         String[] sentSplit = sentence1.strip().split(" ");
         target = sentSplit[2];
         sentence2 = temp[1];
-        audio1 = "src/slide/audio/"+aud1.strip();
-        audio2 = "src/slide/audio/"+aud2.strip();
+        if(aud1.length() >= 16) {
+            if (aud1.substring(0, 16).equals("src/slide/audio/"))
+                audio1 = aud1;
+        }
+        else
+            audio1 = "src/slide/audio/" + aud1.strip();
+        if(aud2.length() >= 16) {
+            if (aud2.substring(0, 16).equals("src/slide/audio/"))
+                audio2 = aud2;
+            else
+                audio2 = "src/slide/audio/" + aud2.strip();
+        }
+        else
+            audio2 = "src/slide/audio/" + aud2.strip();
         if(aud2.equals("#no audio#"))
             audio2 = null;
         practiceAudio = seeAudio;
@@ -236,7 +248,7 @@ public class UpdatedSlide extends JPanel implements MouseListener, KeyListener {
                 bottom.add(new JTextArea(practiceSentence));
         }
 
-        bottom.add(redo);
+        bottom.add(next);
 
         bottom.setVisible(false);
         bottom.setSize(new Dimension(1300,100));
@@ -246,7 +258,7 @@ public class UpdatedSlide extends JPanel implements MouseListener, KeyListener {
     public JPanel makeMenu(String title){
         JPanel part1 = new JPanel(new GridLayout(2,1));
         JPanel sec = new JPanel(new GridLayout(1,5,5,5));
-        sec.add(next);
+        sec.add(redo);
         JTextArea titleBlock = new JTextArea("\n"+title);
         titleBlock.setFont(titleBlock.getFont().deriveFont(40f));
         titleBlock.setOpaque(false);
@@ -267,7 +279,7 @@ public class UpdatedSlide extends JPanel implements MouseListener, KeyListener {
 
     public void practice1(){
         this.setLayout(new BorderLayout(5,5));
-        JPanel part1 = makeMenu("Practice Slide 1");
+        JPanel part1 = makeMenu("Practice 1");
 
         JPanel left = new JPanel(new GridLayout(3,0));
         JPanel right = new JPanel(new GridLayout(3,0));
@@ -311,7 +323,7 @@ public class UpdatedSlide extends JPanel implements MouseListener, KeyListener {
 
     public void practice2(){
         this.setLayout(new BorderLayout(5,5));
-        JPanel top = makeMenu("Practice Slide 2");
+        JPanel top = makeMenu("Practice 2");
         JPanel bottom = makeBottom();
 
         JPanel left = new JPanel(new GridLayout(3,0));
@@ -350,7 +362,7 @@ public class UpdatedSlide extends JPanel implements MouseListener, KeyListener {
     }
     public void practice3(){
         this.setLayout(new BorderLayout(5,5));
-        JPanel top = makeMenu("Practice Slide 3");
+        JPanel top = makeMenu("Practice 3");
         JPanel bottom = makeBottom();
 
         JPanel left = new JPanel(new GridLayout(3,0));

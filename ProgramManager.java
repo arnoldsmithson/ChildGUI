@@ -16,6 +16,7 @@ public class ProgramManager extends JFrame {//possible goal is just to move the 
     private Cursor def = Toolkit.getDefaultToolkit().createCustomCursor(img3,new Point(0,0),"Default");
     private Cursor fish = Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(0, 0), "Fish");
     private Cursor turtle = Toolkit.getDefaultToolkit().createCustomCursor(img2,new Point(0,0),"Turtle");
+    boolean fishActive = false,turtleActive = false,defActive = true;
 
     private Time keeper;
     private long[] records = new long[7];
@@ -25,7 +26,8 @@ public class ProgramManager extends JFrame {//possible goal is just to move the 
 
     private ArrayList<UpdatedSlide> slideOrder16 = new ArrayList<>();
     private ArrayList<UpdatedSlide> slideOrder13 = new ArrayList<>();
-    private Iterator slideIt = slideOrder16.iterator();
+    private ArrayList<UpdatedSlide> desiredSlides;
+    private Iterator slideIt;
 
     private UpdatedSlide currentSlide;
 
@@ -38,17 +40,49 @@ public class ProgramManager extends JFrame {//possible goal is just to move the 
         JOptionPane.showMessageDialog(null, "Are you sure? Check your click!", "Check", JOptionPane.ERROR_MESSAGE);
     }
 
-    public ProgramManager() {
-        myCal = new GregorianCalendar();
+
+    private void makeFile(){
+        String bday = "default";
+        String ord  = "1-6";
         name = JOptionPane.showInputDialog("Subject ID: ");
         fileName = new File("src/slide/logfiles/" + name + ".txt");
-        String bday = JOptionPane.showInputDialog("Please enter your birthday like this:\nday/month/year");
-        String ord = JOptionPane.showInputDialog("Please choose an order: Type '1-3' or '1-6.'");
+        if (fileName.exists()) {
+            if (JOptionPane.showConfirmDialog(null, "This file already exists.\nAre you sure you want to continue this test?", "WARNING",
+                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                Scanner read = null;
+                try{
+                    read = new Scanner(new File("src/slide/logfiles/"+name+".txt"));
+                }catch(Exception e){
+                    System.out.println("File Not Found");
+                }
+                for(int i = 0; i < 3; i++) {
+                    String[] items = read.nextLine().split(" ");
+                    if (items[0].equals("Birthday:")) {
+                        bday = items[items.length - 1];
+                    }
+                    if (items[0].equals("Order")) {
+                        ord = items[items.length - 1];
+                    }
+                }
+                // yes option
+            } else {
+                makeFile();//call again to get new subject ID
+            }
+        }
+        if(!fileName.exists()) {
+            bday = JOptionPane.showInputDialog("Please enter your birthday like this:\nmonth/day/year");
+            while (bday.length() <= 8) {
+                bday = JOptionPane.showInputDialog("That is not a valid birthday. \n Please enter your birthday in the month/day/year style.");
+            }
+            ord = JOptionPane.showInputDialog("Please choose an order: Type '1-3' or '1-6.'");
+            while (!ord.equals("1-6") && !ord.equals("1-3")) {
+                ord = JOptionPane.showInputDialog("That is not a valid order. Please type '1-3' or '1-6.'");
+            }
+        }
         BufferedWriter bWriter = null;
         try {
             fileWriting = new FileWriter(fileName, true);
             bWriter = new BufferedWriter(fileWriting);
-            bWriter.write("Participant ID: " + name + "\n");
             bWriter.write("Date and Time: " + myCal.get(Calendar.MONTH) + "/" + myCal.get(Calendar.DAY_OF_MONTH) + " at " + myCal.get(Calendar.HOUR_OF_DAY) + ":" + myCal.get(Calendar.MINUTE) + ":" + myCal.get(Calendar.SECOND) + "\n");
             bWriter.write("Birthday: " + bday+"\n");
             bWriter.write("Order chosen: "+ord+"\n");
@@ -58,11 +92,25 @@ public class ProgramManager extends JFrame {//possible goal is just to move the 
             System.out.println(ioe);
         }
         System.out.println("Made it through initial file writing");
+        if(ord.equals("1-3")){
+            desiredSlides = slideOrder13;
+            System.out.println("Using 1-3");
+        }
+        else if(ord.equals("1-6")){
+            System.out.println("Using 1-6");
+            desiredSlides = slideOrder16;
+        }
+    }
+
+    public ProgramManager() {
+        myCal = new GregorianCalendar();
+        makeFile();
+        slideIt = desiredSlides.iterator();
         makeIntro();
         processFile();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         p = this.getContentPane();
-        currentSlide = slideOrder16.get(0);
+        currentSlide = desiredSlides.get(0);
         currentSlide.addMouseListener(currentSlide);
         currentSlide.addKeyListener(currentSlide);
         currentSlide.setFocusable(true);
@@ -77,8 +125,11 @@ public class ProgramManager extends JFrame {//possible goal is just to move the 
         atSlide = 1;
         checkNext();
     }
+
+
     public void checkNext(){
-        while(atSlide <= slideOrder16.size()+1){
+        while(atSlide <= desiredSlides.size()+1){
+            currentSlide.requestFocus();
             //System.out.println("in loop");
             try {
                 Thread.sleep(5);
@@ -86,30 +137,45 @@ public class ProgramManager extends JFrame {//possible goal is just to move the 
                 System.out.println("No sleep");
             }
             if(currentSlide.checkRedo()){
-                slideOrder16.set(atSlide-1,currentSlide.reset());
+                this.remove(currentSlide);
+                desiredSlides.set(atSlide-1,currentSlide.reset());
+                currentSlide = desiredSlides.get(atSlide-1);
+                this.add(currentSlide);
+                setCursor(def);
+                fishActive = false;
+                turtleActive = false;
+                defActive = true;
+                this.repaint();
+                this.setVisible(true);
             }
             if(atSlide == 3 && !currentSlide.isClicked()) {
                 System.out.println("Checking calibrations");
                 calibrationMethod();
             }
-            if(slideOrder16.get(atSlide-1).isClicked()){
+            if(desiredSlides.get(atSlide-1).isClicked()){
                 System.out.println("Moving!");
                 nextSlide();
                 p.repaint();
             }
-            if(slideOrder16.get(atSlide-1).checkCurs1()){
+            if(desiredSlides.get(atSlide-1).checkCurs1()){
+                fishActive = true;
+                turtleActive = false;
+                defActive = false;
                 setCursor(fish);
-                slideOrder16.get(atSlide-1).unClickCurs1();
+                desiredSlides.get(atSlide-1).unClickCurs1();
 
             }
-            if(slideOrder16.get(atSlide-1).checkCurs2()){
+            if(desiredSlides.get(atSlide-1).checkCurs2()){
+                fishActive = false;
+                turtleActive = true;
+                defActive = false;
                 setCursor(turtle);
-                slideOrder16.get(atSlide-1).unClickCurs2();
+                desiredSlides.get(atSlide-1).unClickCurs2();
             }
-            if(slideOrder16.get(atSlide-1).checkRedoCalib()){
+            if(desiredSlides.get(atSlide-1).checkRedoCalib()){
                 popToCalibration();
             }
-            if(slideOrder16.get(atSlide-1).checkRedoPractice()){
+            if(desiredSlides.get(atSlide-1).checkRedoPractice()){
                 popToPractice();
             }
 
@@ -118,10 +184,12 @@ public class ProgramManager extends JFrame {//possible goal is just to move the 
 
     public void popToCalibration(){
         backButton = atSlide;
+        desiredSlides.set(backButton-1,desiredSlides.get(backButton-1).reset());
         goToSlide(3);
     }
     public void popToPractice(){
         backButton = atSlide;
+        desiredSlides.set(backButton-1,desiredSlides.get(backButton-1).reset());
         goToSlide(4);
     }
 
@@ -196,29 +264,37 @@ public class ProgramManager extends JFrame {//possible goal is just to move the 
 
     }
     public void nextSlide() {
-        if (atSlide != slideOrder16.size()){
+        if (atSlide != desiredSlides.size()){
             System.out.println("Moving Slide");
-            //writeSlideRecordToFile();
+           // writeSlideRecordToFile();
             this.remove(currentSlide);
             currentSlide.unClickNext();
             if(backButton != -1 && currentSlide.getType().equals("intro3")){
-                currentSlide = slideOrder16.get(backButton-1).reset();
+                desiredSlides.set(backButton-1,desiredSlides.get(backButton-1).reset());
+                currentSlide = desiredSlides.get(backButton-1); //FIX NO LONGER PART OF ARRAYLIST YOU DUM DUM
+                atSlide = backButton;
                 backButton = -1;
+
             }
             else if(backButton != -1 && currentSlide.getType().equals("practice")){
                 if(atSlide == 6){
-                    currentSlide = slideOrder16.get(backButton-1).reset();
+                    desiredSlides.set(backButton-1,desiredSlides.get(backButton-1).reset());
+                    currentSlide = desiredSlides.get(backButton-1);
+                    atSlide = backButton;//FIX NO LONGER PART OF ARRAYLIST YOU DUM DUM
                     backButton = -1;
                 }
                 else{
-                    currentSlide = slideOrder16.get(atSlide).reset();
+                    desiredSlides.set(atSlide-1,desiredSlides.get(atSlide-1).reset());
+                    currentSlide = desiredSlides.get(atSlide); //FIX NO LONGER PART OF ARRAYLIST YOU DUM DUM
+                    atSlide++;
                 }
             }
-            else
-                currentSlide = slideOrder16.get(atSlide);
+            else {
+                desiredSlides.set(atSlide-1,desiredSlides.get(atSlide-1).reset());
+                currentSlide = desiredSlides.get(atSlide);
+                atSlide++;
+            }
             this.add(currentSlide);
-            UpdatedSlide newSlide = slideOrder16.get(atSlide-1).reset();
-            slideOrder16.set(atSlide-1,newSlide);
             currentSlide.addMouseListener(currentSlide);
             currentSlide.addKeyListener(currentSlide);
             currentSlide.setFocusable(true);
@@ -227,26 +303,33 @@ public class ProgramManager extends JFrame {//possible goal is just to move the 
             this.repaint();
             this.setVisible(true);
             setCursor(def);
-            atSlide++;
+            fishActive = false;
+            turtleActive = false;
+            defActive = true;
             System.out.println(atSlide);
         } else {
-            //writeSlideRecordToFile();
-          //  this.removeMouseMotionListener(currentSlide);
-            //writeRecords();
+        //    writeSlideRecordToFile();
+            this.removeMouseListener(currentSlide);
+            this.removeKeyListener(currentSlide);
         }
     }
     private void goToSlide(int num){
-       // writeSlideRecordToFile();
+    //    writeSlideRecordToFile();
         this.remove(currentSlide);
+
         currentSlide.unClickNext();
-        currentSlide = slideOrder16.get(num-1);
+        desiredSlides.set(num-1,desiredSlides.get(num-1).reset());
+        currentSlide = desiredSlides.get(num-1);
         atSlide = num;
-        this.add(currentSlide.reset());
         currentSlide.addMouseListener(currentSlide);
         currentSlide.addKeyListener(currentSlide);
         currentSlide.setFocusable(true);
         currentSlide.requestFocus();
         setCursor(def);
+        fishActive = false;
+        turtleActive = false;
+        defActive = true;
+        this.add(currentSlide);
         this.repaint();
         this.setSize(1350,800);
         this.setVisible(true);

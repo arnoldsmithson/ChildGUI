@@ -6,26 +6,44 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Time;
 import java.util.ArrayList;
 
-public class UpdatedSlide extends JPanel implements MouseListener, KeyListener {
+public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyListener {
+    private Time keeper;
+    private long[] records = new long[7];
+    public int[] curCoords = new int[2];
+
+
     ArrayList<GenButton> testButtons = new ArrayList<>();
+
+
     private Font font = new Font("Comic Sans MS", 0,40);
     private Font fontSmall = new Font("Comic Sans MS",0,24);
+
+    private String redoPractice = "Click here to redo \n the practice slides.";
+    private String calibSentence = "Click here to redo \n the calibration.";
+
+
+    private GenButton practice = new GenButton("<html>"+redoPractice.replaceAll("\\n","<br>")+"</html>","redoPractice");
     private GenButton next = new GenButton(new ImageIcon("src/slide/images/next.png"),"next");
     private GenButton silly = new GenButton(new ImageIcon("src/slide/images/silly.png"),"silly");
     private GenButton redo = new GenButton(new ImageIcon("src/slide/images/redo.png"),"redo");
     private GenButton fish = new GenButton(new ImageIcon("src/slide/images/Fish.png"),"Cursor 1");
     private GenButton turtle = new GenButton(new ImageIcon("src/slide/images/Turtle.png"),"Cursor 2");
     private GenButton sentenceButton;
-    private String redoPractice = "Click here to redo \n the practice slides.";
-    private GenButton practice = new GenButton("<html>"+redoPractice.replaceAll("\\n","<br>")+"</html>","redoPractice");
-    private String calibSentence = "Click here to redo \n the calibration.";
     private GenButton calib = new GenButton("<html>"+calibSentence.replaceAll("\\n","<br>")+"</html>","redoCalibration");
-    private String rule,sentence1,sentence2,practiceSentence,audio1,audio2,practiceAudio,distract,target,type,position,targetAmt,targLeft,distAmt;
+
+    private String rule,sentence1,sentence2,practiceSentence,audio1,
+            audio2,practiceAudio,distract,target,type,position,
+            targetAmt,targLeft,distAmt,sentCurs1,sentCurs2;
+
+    private JPanel bottom;
+
     private int posInt,targInt,distInt;
 
     public UpdatedSlide(String typ){
+        this.addMouseListener(this);
         type = typ;
         switch(type){
             case "intro1":
@@ -56,9 +74,12 @@ public class UpdatedSlide extends JPanel implements MouseListener, KeyListener {
         this.rule = rule.strip();
         String[] temp = sentenceBlock.strip().split("and");
         String[] sentSplit = temp[0].split(" ");
+        sentCurs1 = sentSplit[0].strip();
+
         target = sentSplit[3].substring(0,1).toUpperCase()+sentSplit[3].substring(1,sentSplit[3].length()-1);
         sentence1 = temp[0];
         sentence2 = temp[1];
+        sentCurs2 = sentence2.split(" ")[0].strip();
         audio1 = aud1.strip();
         audio2 = aud2.strip();
         targLeft = targSpot.strip();
@@ -68,11 +89,13 @@ public class UpdatedSlide extends JPanel implements MouseListener, KeyListener {
         posInt = new Integer(position);
         targInt = new Integer(targetAmt);
         distInt = new Integer(distAmt);
+        this.addMouseListener(this);
 
         makeSlide();
 
     }
     public UpdatedSlide(String spot, String sentenceBlock,String aud1, String aud2, String seeAudio){
+        this.addMouseListener(this);
         type = "practice";
         position = spot.strip();
         String[] temp = sentenceBlock.strip().split("and");
@@ -129,6 +152,63 @@ public class UpdatedSlide extends JPanel implements MouseListener, KeyListener {
     public void unClickNext(){next.unClick();}
 
 
+    public void testLogic(){
+        ArrayList<GenButton> targButtons = new ArrayList<>();
+        ArrayList<GenButton> distButtons = new ArrayList<>();
+        for (int i = 0; i < testButtons.size(); i++) {
+            if (testButtons.get(i).isCorrect()) {
+                targButtons.add(testButtons.get(i));
+            } else {
+                distButtons.add(testButtons.get(i));
+            }
+        }
+
+        for(int i = 0;i<targButtons.size();i++){
+            GenButton currentTargButton = targButtons.get(i);
+            if(currentTargButton.isClicked() && !currentTargButton.isVisited()){
+                if(sentenceButton.getText().equals(sentence1)){
+                    if(ProgramManager.fishActive && sentCurs1.equals("Fishy")){
+                        //add fishy onto layer
+                        //reveal next sentence
+                    }
+                    else if(ProgramManager.turtleActive && sentCurs1.equals("Turtle")){
+                        //add turtle onto layer
+                        //reveal next sentence
+                    }
+                    else{
+                        //ERROR
+                    }
+                }
+                else if(sentenceButton.getText().equals(sentence2)){
+                    if(ProgramManager.fishActive && sentCurs2.equals("Fishy")){
+                        //add fishy onto layer
+                        //reveal bottom
+                    }
+                    else if(ProgramManager.turtleActive && sentCurs2.equals("Turtle")){
+                        //add turtle on layer
+                        //reveal bottom
+                    }
+                    else{
+                        //ERROR
+                    }
+                }
+                else{
+
+                }
+            }
+        }
+        for(int j = 0; j < distButtons.size();j++){
+
+        }
+
+
+
+
+        }
+
+
+
+
     public UpdatedSlide reset(){
         UpdatedSlide ne = null;
         if(type.equals("intro1") || type.equals("intro2") || type.equals("intro3") || type.equals("ready") || type.equals("break") || type.equals("end")){
@@ -153,7 +233,7 @@ public class UpdatedSlide extends JPanel implements MouseListener, KeyListener {
         this.setLayout(new BorderLayout(5,5));
         JPanel menu = makeMenu("Slide "+posInt);
         JPanel buttonPanel = makeButtons();
-        JPanel bottom = makeBottom();
+        bottom = makeBottom();
         this.add(menu,BorderLayout.NORTH);
         this.add(buttonPanel,BorderLayout.CENTER);
         this.add(bottom,BorderLayout.SOUTH);
@@ -691,7 +771,8 @@ public class UpdatedSlide extends JPanel implements MouseListener, KeyListener {
 
 
     public void mouseClicked(MouseEvent event) {
-
+        System.out.println(event.getX());
+        System.out.println(event.getY());
     }
 
     public void mousePressed(MouseEvent event) {

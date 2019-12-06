@@ -1,5 +1,6 @@
 package slide;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -9,12 +10,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class GenButton extends JButton implements MouseListener {
     private String type,sentence1,sentence2,name;//What kind of button it is --Target or Distractor
-    private boolean correct, clicked;//whether this button with image is correct or not
-    private int numClicks = 0;
+    private boolean correct, clicked,visited = false;//whether this button with image is correct or not
+    private int numClicks = 0,curX,curY;
     public String clickRecord = "0";
     private String audioFileName1, audio2;
     private Font font = new Font("Comic Sans MS",0,40);
@@ -24,6 +28,7 @@ public class GenButton extends JButton implements MouseListener {
 
     public GenButton(Icon character,String characterName,String audio){//constructor for calibration
         super(characterName, character);
+
 
         this.setFont(new Font("Comic Sans MS",0,16));
         audioFileName1 = audio;
@@ -38,9 +43,11 @@ public class GenButton extends JButton implements MouseListener {
     public GenButton(Icon picture, String name, boolean corr){//Constructor for non-calibration testButtons
         super(picture);
         type = "test";
+
         this.name = name;
         correct = corr;
         addMouseListener(this);
+
 
     }
     public GenButton(Icon icon,String content){//for Redo, Silly testButtons
@@ -85,7 +92,8 @@ public class GenButton extends JButton implements MouseListener {
         addMouseListener(this);
 
     }
-    public void click(){
+    public int[] click(){
+        int x = 0, y = 0;
         System.out.println("Being Clicked");
         clicked = true;
         numClicks++;
@@ -109,12 +117,22 @@ public class GenButton extends JButton implements MouseListener {
             }
         }
         if(type.equals("test")){
+            x = this.getLocation().x;
+            y = this.getLocation().y;
+            System.out.println("X location: "+x);
+            System.out.println("Y Location: "+y);
             System.out.println("Test Button clicked");
+            if(!correct){
+                ProgramManager.displayError();
+            }
         }
+        int[] coords = {x,y};
+        return coords;
     }
 
     public boolean isClicked(){return clicked;}
-
+    public boolean isVisited(){return visited;}
+    public void visit(){visited = true;}
     public boolean isCorrect() { return correct; }
     public void inCorrect(){correct = false;}
     public void correct(){correct = true;}
@@ -148,7 +166,10 @@ public class GenButton extends JButton implements MouseListener {
     public void mouseReleased(MouseEvent e){
         /*Assess correct click, alert message otherwise*/}
     public void mouseClicked(MouseEvent e){
-
+            curX = e.getX();
+            curY = e.getY();
+        System.out.println(curX);
+        System.out.println(curY);
             click();
 
         /**/}

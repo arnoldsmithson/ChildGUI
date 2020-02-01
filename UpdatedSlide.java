@@ -2,50 +2,48 @@ package slide;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.Time;
+import java.awt.event.*;
 import java.util.ArrayList;
 
-public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyListener {
-    private Time keeper;
-    private long[] records = new long[7];
-    public int[] curCoords = new int[2];
+public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyListener{
+
+
 
 
     ArrayList<GenButton> testButtons = new ArrayList<>();
 
 
-    private Font font = new Font("Comic Sans MS", 0,40);
-    private Font fontSmall = new Font("Comic Sans MS",0,24);
+    private Font font = new Font("Comic Sans MS", 0, 40);
+    private Font fontSmall = new Font("Comic Sans MS", 0, 24);
 
     private String redoPractice = "Click here to redo \n the practice slides.";
     private String calibSentence = "Click here to redo \n the calibration.";
 
 
-    private GenButton practice = new GenButton("<html>"+redoPractice.replaceAll("\\n","<br>")+"</html>","redoPractice");
-    private GenButton next = new GenButton(new ImageIcon("src/slide/images/next.png"),"next");
-    private GenButton silly = new GenButton(new ImageIcon("src/slide/images/silly.png"),"silly");
-    private GenButton redo = new GenButton(new ImageIcon("src/slide/images/redo.png"),"redo");
-    private GenButton fish = new GenButton(new ImageIcon("src/slide/images/Fish.png"),"Cursor 1");
-    private GenButton turtle = new GenButton(new ImageIcon("src/slide/images/Turtle.png"),"Cursor 2");
+    private GenButton practice = new GenButton("<html>" + redoPractice.replaceAll("\\n", "<br>") + "</html>", "redoPractice");
+    private GenButton next = new GenButton(new ImageIcon(getClass().getResource("images/Next.png")), "next");
+    private GenButton silly = new GenButton(new ImageIcon(getClass().getResource("images/Silly.png")), "silly");
+    private GenButton redo = new GenButton(new ImageIcon(getClass().getResource("images/Redo.png")), "redo");
+    private GenButton fish = new GenButton(new ImageIcon(getClass().getResource("images/Fish.png")), "Cursor 1");
+    private GenButton turtle = new GenButton(new ImageIcon(getClass().getResource("images/Turtle.png")), "Cursor 2");
     private GenButton sentenceButton;
-    private GenButton calib = new GenButton("<html>"+calibSentence.replaceAll("\\n","<br>")+"</html>","redoCalibration");
+    private GenButton calib = new GenButton("<html>" + calibSentence.replaceAll("\\n", "<br>") + "</html>", "redoCalibration");
 
-    private String rule,sentence1,sentence2,practiceSentence,audio1,
-            audio2,practiceAudio,distract,target,type,position,
-            targetAmt,targLeft,distAmt,sentCurs1,sentCurs2;
+    private String rule, sentence1, sentence2, practiceSentence, audio1,
+            audio2, practiceAudio, distract, target, type, position,
+            targetAmt, targLeft, distAmt, sentCurs1, sentCurs2, logicRule;
 
-    private JPanel bottom;
 
-    private int posInt,targInt,distInt;
+    private int posInt, targInt, distInt;
 
-    public UpdatedSlide(String typ){
+    private boolean finished = false;
+
+    public UpdatedSlide(String typ,int position) {
+        posInt = position;
+        finished = true;
         this.addMouseListener(this);
         type = typ;
-        switch(type){
+        switch (type) {
             case "intro1":
                 intro1();
                 break;
@@ -68,20 +66,31 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
     }
 
     public UpdatedSlide(String spot, String rule, String sentenceBlock, String aud1, String aud2, String targNum,
-                        String targSpot, String distractor, String distNum){
+                        String targSpot, String distractor, String distNum, String compRule) {
         type = "test";
+        logicRule = compRule;
         position = spot.strip();
         this.rule = rule.strip();
         String[] temp = sentenceBlock.strip().split("and");
         String[] sentSplit = temp[0].split(" ");
+        String[] sent2Split = temp[1].split(" ");
         sentCurs1 = sentSplit[0].strip();
 
-        target = sentSplit[3].substring(0,1).toUpperCase()+sentSplit[3].substring(1,sentSplit[3].length()-1);
+        target = sentSplit[3].substring(0, 1).toUpperCase() + sentSplit[3].substring(1, sentSplit[3].length() - 1);
         sentence1 = temp[0];
         sentence2 = temp[1];
-        sentCurs2 = sentence2.split(" ")[0].strip();
+
+        sentCurs2 = sentence2.split(" ")[1].strip();
         audio1 = aud1.strip();
-        audio2 = aud2.strip();
+        if (aud2 != null)
+            audio2 = aud2.strip();
+        if (logicRule.equals("one") || logicRule.equals("control")) {
+            audio2 = null;
+            if (logicRule.equals("control")) {
+                target = sent2Split[sent2Split.length - 1];
+                target = target.substring(0, target.length() - 2);
+            }
+        }
         targLeft = targSpot.strip();
         this.distract = distractor.strip();
         targetAmt = targNum.strip();
@@ -94,33 +103,39 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         makeSlide();
 
     }
-    public UpdatedSlide(String spot, String sentenceBlock,String aud1, String aud2, String seeAudio){
+    public boolean checkReady(){
+        return sentenceButton.isReady();
+    }
+    public boolean sillyCorrect(){
+        return silly.isSecVis();
+    }
+    public void unClickSilly(){
+        silly.unClick();
+    }
+    public boolean checkFinished(){return finished;}
+
+    public int getPosInt(){return posInt;}
+
+    public UpdatedSlide(String spot, String sentenceBlock, String aud1, String aud2, String compRule, String seeAudio) {
         this.addMouseListener(this);
         type = "practice";
+        finished = false;
+        logicRule = compRule;
         position = spot.strip();
+        posInt = new Integer(position);
         String[] temp = sentenceBlock.strip().split("and");
         sentence1 = temp[0];
         String[] sentSplit = sentence1.strip().split(" ");
         target = sentSplit[2];
         sentence2 = temp[1];
-        if(aud1.length() >= 16) {
-            if (aud1.substring(0, 16).equals("src/slide/audio/"))
-                audio1 = aud1;
-        }
+        audio1 = aud1.strip();
+        audio2 = aud2.strip();
+
+        if(seeAudio.length() > 20)
+            practiceAudio = seeAudio.strip().split(" ")[8];
         else
-            audio1 = "src/slide/audio/" + aud1.strip();
-        if(aud2.length() >= 16) {
-            if (aud2.substring(0, 16).equals("src/slide/audio/"))
-                audio2 = aud2;
-            else
-                audio2 = "src/slide/audio/" + aud2.strip();
-        }
-        else
-            audio2 = "src/slide/audio/" + aud2.strip();
-        if(aud2.equals("#no audio#"))
-            audio2 = null;
-        practiceAudio = seeAudio;
-        switch(position){
+            practiceAudio = seeAudio;
+        switch (position) {
             case "1":
                 practiceSentence = "See, fishy and turtle can go to different places!";
                 practice1();
@@ -139,211 +154,204 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         //practice slide constructor
 
     }
-    public String getType(){return type;}
-    public boolean isClicked(){return next.isClicked();}
-    public boolean checkCurs1(){return fish.isClicked();}
-    public boolean checkCurs2(){return turtle.isClicked();}
-    public boolean checkSilly(){return silly.isClicked();}
-    public boolean checkRedo(){return redo.isClicked();}
-    public void unClickCurs1(){fish.unClick();}
-    public void unClickCurs2(){turtle.unClick();}
-    public boolean checkRedoPractice(){return practice.isClicked();}
-    public boolean checkRedoCalib(){return calib.isClicked();}
-    public void unClickNext(){next.unClick();}
 
+    public String getType() {
+        return type;
+    }
 
-    public void testLogic(){
-        ArrayList<GenButton> targButtons = new ArrayList<>();
-        ArrayList<GenButton> distButtons = new ArrayList<>();
-        for (int i = 0; i < testButtons.size(); i++) {
-            if (testButtons.get(i).isCorrect()) {
-                targButtons.add(testButtons.get(i));
-            } else {
-                distButtons.add(testButtons.get(i));
-            }
+    public boolean isClicked() {
+        return next.isClicked();
+    }
+
+    public boolean checkCurs1() {
+        return fish.isClicked();
+    }
+
+    public boolean checkCurs2() {
+        return turtle.isClicked();
+    }
+
+    public boolean checkSilly() {
+        return silly.isClicked();
+    }
+
+    public boolean checkRedo() {
+        return redo.isClicked();
+    }
+
+    public void unClickCurs1() {
+        fish.unClick();
+    }
+
+    public void unClickCurs2() {
+        turtle.unClick();
+    }
+
+    public boolean checkRedoPractice() {
+        return practice.isClicked();
+    }
+
+    public boolean checkRedoCalib() {
+        return calib.isClicked();
+    }
+
+    public void unClickNext() {
+        next.unClick();
+    }
+    public void unFinish(){
+        finished = false;
+    }
+    public void finish(){
+        finished = true;
+    }
+
+    public void setNext() {
+        if (type.equals("practice")) {
+            sentenceButton.pracSent();
+            GenButton.playSound(practiceAudio);
+            next.setVisible(true);
+            finished = true;
+
+        } else {
+            next.setVisible(true);
+            finished = true;
         }
+        ProgramManager.reactionMeasure("2ObjNext");
+    }
 
-        for(int i = 0;i<targButtons.size();i++){
-            GenButton currentTargButton = targButtons.get(i);
-            if(currentTargButton.isClicked() && !currentTargButton.isVisited()){
-                if(sentenceButton.getText().equals(sentence1)){
-                    if(ProgramManager.fishActive && sentCurs1.equals("Fishy")){
-                        //add fishy onto layer
-                        //reveal next sentence
-                    }
-                    else if(ProgramManager.turtleActive && sentCurs1.equals("Turtle")){
-                        //add turtle onto layer
-                        //reveal next sentence
-                    }
-                    else{
-                        //ERROR
-                    }
-                }
-                else if(sentenceButton.getText().equals(sentence2)){
-                    if(ProgramManager.fishActive && sentCurs2.equals("Fishy")){
-                        //add fishy onto layer
-                        //reveal bottom
-                    }
-                    else if(ProgramManager.turtleActive && sentCurs2.equals("Turtle")){
-                        //add turtle on layer
-                        //reveal bottom
-                    }
-                    else{
-                        //ERROR
-                    }
-                }
-                else{
+    public String getRule() {
+        return logicRule;
+    }
 
-                }
-            }
-        }
-        for(int j = 0; j < distButtons.size();j++){
+    public String getSentCurs1() {
+        return sentCurs1;
+    }
 
-        }
+    public String getSentCurs2() {
+        return sentCurs2;
+    }
 
+    public void nextSentence() {
+        sentenceButton.advanceSentence();
+    }
 
-
-
-        }
-
-
-
-
-    public UpdatedSlide reset(){
+    public UpdatedSlide reset() {
         UpdatedSlide ne = null;
-        if(type.equals("intro1") || type.equals("intro2") || type.equals("intro3") || type.equals("ready") || type.equals("break") || type.equals("end")){
-            ne = new UpdatedSlide(type);
-        }
-        else if(type.equals("practice")){
+        if (type.equals("intro1") || type.equals("intro2") || type.equals("intro3") || type.equals("ready") || type.equals("break") || type.equals("end")) {
+            ne = new UpdatedSlide(type,posInt);
+        } else if (type.equals("practice")) {
 
-            ne = new UpdatedSlide(position, sentence1+" and "+sentence2,audio1,audio2,practiceAudio);
+            ne = new UpdatedSlide(position, sentence1 + " and " + sentence2, audio1, audio2, logicRule,practiceAudio);
+        } else {//type equals test
+            ne = new UpdatedSlide(position, rule, sentence1 + " and " + sentence2, audio1, audio2, targetAmt, targLeft, distract, distAmt, logicRule);
         }
-        else{//type equals test
-            ne = new UpdatedSlide(position,rule,sentence1+" and "+sentence2,audio1,audio2,targetAmt,targLeft,distract,distAmt);
-        }
+        this.addMouseListener(ne);
+        this.addKeyListener(ne);
+        ne.setFocusable(true);
         return ne;
     }
 
+    public ArrayList<GenButton> getButtons() {
+        return testButtons;
+    }
 
 
-    public ArrayList<GenButton> getButtons(){return testButtons;}
-
-
-    public void makeSlide(){
-        this.setLayout(new BorderLayout(5,5));
-        JPanel menu = makeMenu("Slide "+posInt);
+    public void makeSlide() {
+        this.setLayout(new BorderLayout(5, 5));
+        JPanel menu = makeMenu("Slide " + posInt);
         JPanel buttonPanel = makeButtons();
-        bottom = makeBottom();
-        this.add(menu,BorderLayout.NORTH);
-        this.add(buttonPanel,BorderLayout.CENTER);
-        this.add(bottom,BorderLayout.SOUTH);
+        this.add(menu, BorderLayout.NORTH);
+        this.add(buttonPanel, BorderLayout.CENTER);
         this.setVisible(true);
 
     }
 
-    public JPanel makeButtons(){
-        JPanel left = new JPanel(new GridLayout(3,0));
-        JPanel right = new JPanel(new GridLayout(3,0));
-        GenButton tempButton;
-        for(int i = 0; i < targInt; i++) {
-            if (targLeft.strip().equals("Left")) {
-                if(targInt == 3) {
-                    left.add(new JPanel());
-                    left.add(new JPanel());
-                    left.add(tempButton = new GenButton(new ImageIcon("src/slide/images/"+target+".png"),target,true));
-                }
+    public void clickRedo() {
+        redo.increaseClicks();
+    }
+
+    public JPanel makeButtons() {
+
+        JPanel buttonSlide = new JPanel(new GridLayout(3, 7, 0, 5));
+        GenButton temp1 = null, temp2, temp3, temp4 = null;
+        for (int i = 0; i < 3; i++) {
+            buttonSlide.add(new JPanel());
+
+
+            if (targLeft.equals("Left")) {
+
+                if (targInt == 3)
+                    buttonSlide.add(new JPanel());
                 else {
-                    if (i == 0 || i == 2 || i == 4)
-                        left.add(new JPanel());
-                    left.add(tempButton = new GenButton(new ImageIcon("src/slide/images/" + target + ".png"), target, true));
+                    temp1 = new GenButton(new ImageIcon(getClass().getResource("images/" + target + ".png")), target, true);
+                    buttonSlide.add(temp1);
                 }
-                testButtons.add(tempButton);
 
-            } else if (targLeft.strip().equals("Right")) {
+                temp2 = new GenButton(new ImageIcon(getClass().getResource("images/" + target + ".png")), target, true);
+                buttonSlide.add(temp2);
+                buttonSlide.add(new JPanel());
+                temp3 = new GenButton(new ImageIcon(getClass().getResource("images/" + distract + ".png")), distract, false);
+                buttonSlide.add(temp3);
 
-                if(targInt == 3) {
-                    right.add(tempButton = new GenButton(new ImageIcon("src/slide/images/"+target+".png"),target,true));
-                    right.add(new JPanel());
-                    right.add(new JPanel());
+                if (distInt == 3)
+                    buttonSlide.add(new JPanel());
+                else {
+                    temp4 = new GenButton(new ImageIcon(getClass().getResource("images/" + distract + ".png")), distract, false);
+                    buttonSlide.add(temp4);
+
                 }
-                else{
-                    right.add(tempButton = new GenButton(new ImageIcon("src/slide/images/"+target+".png"),target,true));
-                    if(i == 1 || i == 3 || i == 5)
-                        right.add(new JPanel());
-                }
-                testButtons.add(tempButton);
+
+
             } else {
-                System.out.println("Error reading!");
+
+                if (distInt == 3)
+                    buttonSlide.add(new JPanel());
+                else {
+                    temp1 = new GenButton(new ImageIcon(getClass().getResource("images/" + distract + ".png")), distract, false);
+                    buttonSlide.add(temp1);
+                }
+
+                temp2 = new GenButton(new ImageIcon(getClass().getResource("images/" + distract + ".png")), distract, false);
+                buttonSlide.add(temp2);
+                buttonSlide.add(new JPanel());
+                temp3 = new GenButton(new ImageIcon(getClass().getResource("images/" + target + ".png")), target, true);
+                buttonSlide.add(temp3);
+
+                if (targInt == 3)
+                    buttonSlide.add(new JPanel());
+                else {
+                    temp4 = new GenButton(new ImageIcon(getClass().getResource("images/" + target + ".png")), target, false);
+                    buttonSlide.add(temp4);
+                }
             }
+            if (i != 2)
+                buttonSlide.add(new JPanel());
+            else {
+                buttonSlide.add(next);
+                next.setVisible(false);
+            }
+            if (temp1 != null)
+                testButtons.add(temp1);
+            testButtons.add(temp2);
+            testButtons.add(temp3);
+            if (temp4 != null)
+                testButtons.add(temp4);
+
         }
-        for(int i = 0; i < distInt; i++){
-            if(targLeft.equals("Left")){
-
-
-                if(distInt == 3) {
-                    right.add(tempButton = new GenButton(new ImageIcon("src/slide/images/"+distract+".png"),distract,false));
-                    right.add(new JPanel());
-                    right.add(new JPanel());
-                }
-                else{
-                    right.add(tempButton = new GenButton(new ImageIcon("src/slide/images/"+distract+".png"),distract,false));
-                    if(i == 1 || i == 3 || i == 5)
-                        right.add(new JPanel());
-                }
-                testButtons.add(tempButton);
-            }
-            else{
-                if(distInt == 3) {
-                    left.add(new JPanel());
-                    left.add(new JPanel());
-                    left.add(tempButton = new GenButton(new ImageIcon("src/slide/images/"+distract+".png"),distract,true));
-                }
-                else{
-                    if(i == 0 || i == 2 || i ==4)
-                        left.add(new JPanel());
-                    left.add(tempButton = new GenButton(new ImageIcon("src/slide/images/"+distract+".png"),distract,true));
-
-                }
-                testButtons.add(tempButton);
-            }
-        }
-        left.setVisible(true);
-        right.setVisible(true);
-        return combinePanels(left,right);
+        return buttonSlide;
     }
 
-    public JPanel combinePanels(JPanel one, JPanel two){
-        JPanel combine2 = new JPanel(new BorderLayout(5,5));
-        combine2.add(one,BorderLayout.WEST);
-        combine2.add(two,BorderLayout.EAST);
-        combine2.setVisible(true);
-        return combine2;
-    }
-
-    public JPanel makeBottom(){
-        JPanel bottom = new JPanel(new GridLayout(1,5,0,10));
-        for(int j = 0; j < 4; j++) {
-            bottom.add(new JPanel());
-            if(j == 2 && type.equals("practice"))
-                bottom.add(new JTextArea(practiceSentence));
-        }
-
-        bottom.add(next);
-
-        bottom.setVisible(false);
-        bottom.setSize(new Dimension(1300,100));
-        return bottom;
-    }
-
-    public JPanel makeMenu(String title){
-        JPanel part1 = new JPanel(new GridLayout(2,1));
-        JPanel sec = new JPanel(new GridLayout(1,5,5,5));
+    public JPanel makeMenu(String title) {
+        JPanel part1 = new JPanel(new GridLayout(2, 1));
+        JPanel sec = new JPanel(new GridLayout(1, 5, 5, 5));
         sec.add(redo);
-        JTextArea titleBlock = new JTextArea("\n"+title);
+        JTextArea titleBlock = new JTextArea("\n" + title);
         titleBlock.setFont(titleBlock.getFont().deriveFont(40f));
         titleBlock.setOpaque(false);
-
-        sentenceButton = new GenButton(new ImageIcon("src/slide/images/ready.png"),"Sentence",sentence1,sentence2,audio1,audio2);
+        if(!type.equals("practice"))
+            sentenceButton = new GenButton(new ImageIcon(getClass().getResource("images/ready.png")), "Sentence", sentence1, sentence2,"", audio1, audio2);
+        else
+            sentenceButton = new GenButton(new ImageIcon(getClass().getResource("images/ready.png")), "Sentence", sentence1, sentence2,practiceSentence, audio1, audio2);
         sec.add(silly);
         sec.add(titleBlock);
         sec.add(fish);
@@ -352,141 +360,132 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         //sentenceButton.setPreferredSize(new Dimension(this.getWidth(),this.getHeight()));
         part1.add(sec);
         part1.add(sentenceButton);
-        part1.setSize(1300,300);
+        part1.setSize(1300, 300);
         return part1;
     }
 
 
-    public void practice1(){
-        this.setLayout(new BorderLayout(5,5));
+    public void practice1() {
+        this.setLayout(new BorderLayout(5, 5));
         JPanel part1 = makeMenu("Practice 1");
+        sentCurs1 = "Fishy";
+        sentCurs2 = "Turtle";
 
-        JPanel left = new JPanel(new GridLayout(3,0));
-        JPanel right = new JPanel(new GridLayout(3,0));
-        GenButton object1,object2,object3;
-        object1 = new GenButton(new ImageIcon("src/slide/images/Ambulance.png"),"Ambulance",true);
-        object2 = new GenButton(new ImageIcon("src/slide/images/Acorn.png"),"Acorn",false);
-        object3 = new GenButton(new ImageIcon("src/slide/images/Ape.png"),"Ape",false);
-        left.add(new JPanel());
-        left.add(object1);
-        left.add(new JPanel());
-        left.add(object2);
-        left.add(new JPanel());
-        left.add(object3);
-        left.setVisible(true);
-        testButtons.add(object1);
-        testButtons.add(object2);
-        testButtons.add(object3);
+        JPanel middle;
 
-        right.add(object1 = new GenButton(new ImageIcon("src/slide/images/Anchor.png"),"Anchor",false));
-        right.add(new JPanel());
-        right.add(object2 = new GenButton(new ImageIcon("src/slide/images/Umbrella.png"),"Umbrella",false));
-        right.add(new JPanel());
-        right.add(object3 = new GenButton(new ImageIcon("src/slide/images/Elephant.png"),"Elephant",true));
-        right.add(new JPanel());
-        right.setVisible(true);
-        testButtons.add(object1);
-        testButtons.add(object2);
-        testButtons.add(object3);
+        GenButton object1, object2, object3,object4,object5,object6;
+        object1 = new GenButton(new ImageIcon(getClass().getResource("images/Ambulance.png")), "Ambulance", true);
+        object2 = new GenButton(new ImageIcon(getClass().getResource("images/Acorn.png")), "Acorn", false);
+        object3 = new GenButton(new ImageIcon(getClass().getResource("images/Ape.png")), "Ape", false);
+        object4 = new GenButton(new ImageIcon(getClass().getResource("images/Anchor.png")), "Anchor", false);
+        object5 = new GenButton(new ImageIcon(getClass().getResource("images/Umbrella.png")), "Umbrella", false);
+        object6 = new GenButton(new ImageIcon(getClass().getResource("images/Elephant.png")), "Elephant", false);
 
-        JPanel combine = combinePanels(left,right);
-        combine.setVisible(true);
-        JPanel bottom = makeBottom();
+        middle = practiceButtons(object1,object2,object3,object4,object5,object6);
 
-        this.add(part1,BorderLayout.NORTH);
-        this.add(combine,BorderLayout.CENTER);
-        this.add(bottom,BorderLayout.SOUTH);
+        this.add(part1, BorderLayout.NORTH);
+        this.add(middle, BorderLayout.CENTER);
         this.setVisible(true);
     }
 
+    public JPanel practiceButtons(GenButton ob1, GenButton ob2, GenButton ob3, GenButton ob4, GenButton ob5, GenButton ob6){
+        JPanel middle = new JPanel(new GridLayout(3,7,5,5));
+
+        middle.add(new JPanel());
+        middle.add(new JPanel());
+        middle.add(ob1);
+        middle.add(new JPanel());
+        middle.add(ob2);
+        middle.add(new JPanel());
+        middle.add(new JPanel());
+
+        middle.add(new JPanel());
+        middle.add(new JPanel());
+        middle.add(ob3);
+        middle.add(new JPanel());
+        middle.add(ob4);
+        middle.add(new JPanel());
+        middle.add(new JPanel());
+
+        middle.add(new JPanel());
+        middle.add(new JPanel());
+        middle.add(ob5);
+        middle.add(new JPanel());
+        middle.add(ob6);
+        middle.add(new JPanel());
+        middle.add(next);
+
+        testButtons.add(ob1);
+        testButtons.add(ob2);
+        testButtons.add(ob3);
+        testButtons.add(ob4);
+        testButtons.add(ob5);
+        testButtons.add(ob6);
+        next.setVisible(false);
 
 
-    public void practice2(){
-        this.setLayout(new BorderLayout(5,5));
+        return middle;
+
+    }
+
+
+    public void practice2() {
+        this.setLayout(new BorderLayout(5, 5));
         JPanel top = makeMenu("Practice 2");
-        JPanel bottom = makeBottom();
+        sentCurs1 = "Turtle";
+        sentCurs2 = "Fishy";
 
-        JPanel left = new JPanel(new GridLayout(3,0));
-        JPanel right = new JPanel(new GridLayout(3,0));
-        GenButton object1,object2,object3;
+        JPanel middle;
+        GenButton object1 = new GenButton(new ImageIcon(getClass().getResource("images/Ant.png")),"Ant",false);
+        GenButton object2 = new GenButton(new ImageIcon(getClass().getResource("images/Egg.png")),"Egg",false);
+        GenButton object3 = new GenButton(new ImageIcon(getClass().getResource("images/Apple.png")),"Apple",false);
+        GenButton object4 = new GenButton(new ImageIcon(getClass().getResource("images/Eggplant.png")),"Eggplant",false);
+        GenButton object5 = new GenButton(new ImageIcon(getClass().getResource("images/Owl.png")),"Owl",false);
+        GenButton object6 = new GenButton(new ImageIcon(getClass().getResource("images/Orange.png")),"Orange",true);
 
+        middle = practiceButtons(object1,object2,object3,object4,object5,object6);
 
-        left.add(new JPanel());
-        left.add(object1 = new GenButton(new ImageIcon("src/slide/images/Ant.png"),"Ant",false));
-        left.add(new JPanel());
-        left.add(object2 = new GenButton(new ImageIcon("src/slide/images/Egg.png"),"Egg",false));
-        left.add(new JPanel());
-        left.add(object3 = new GenButton(new ImageIcon("src/slide/images/Apple.png"),"Apple",false));
-        testButtons.add(object1);
-        testButtons.add(object2);
-        testButtons.add(object3);
-
-        right.add(object1 = new GenButton(new ImageIcon("src/slide/images/Eggplant.png"),"Eggplant",false));
-        right.add(new JPanel());
-        right.add(object2 = new GenButton(new ImageIcon("src/slide/images/Owl.png"),"Owl",false));
-        right.add(new JPanel());
-        right.add(object3 = new GenButton(new ImageIcon("src/slide/images/Orange.png"),"Orange",true));
-        right.add(new JPanel());
-        testButtons.add(object1);
-        testButtons.add(object2);
-        testButtons.add(object3);
-
-        JPanel middle = combinePanels(left,right);
-
-        this.add(top,BorderLayout.NORTH);
-        this.add(middle,BorderLayout.CENTER);
-        this.add(bottom,BorderLayout.SOUTH);
+        this.add(top, BorderLayout.NORTH);
+        this.add(middle, BorderLayout.CENTER);
         this.setVisible(true);
 
 
     }
-    public void practice3(){
-        this.setLayout(new BorderLayout(5,5));
+
+    public void practice3() {
+        this.setLayout(new BorderLayout(5, 5));
         JPanel top = makeMenu("Practice 3");
-        JPanel bottom = makeBottom();
 
-        JPanel left = new JPanel(new GridLayout(3,0));
-        JPanel right = new JPanel(new GridLayout(3,0));
+        sentCurs1 = "Turtle";
+        GenButton object1, object2, object3,object4,object5,object6;
 
-        GenButton object1,object2,object3;
+        object1 = new GenButton(new ImageIcon(getClass().getResource("images/Octopus.png")), "Octopus", false);
+        object2 = new GenButton(new ImageIcon(getClass().getResource("images/Acorn.png")), "Acorn", false);
+        object3 = new GenButton(new ImageIcon(getClass().getResource("images/Ogre.png")), "Ogre", false);
 
+        object4 = new GenButton(new ImageIcon(getClass().getResource("images/Icecream.png")), "Ice Cream", false);
+        object5 = new GenButton(new ImageIcon(getClass().getResource("images/Orange.png")), "Orange", false);
+        object6 = new GenButton(new ImageIcon(getClass().getResource("images/Umbrella.png")), "Umbrella", false);
 
-        left.add(new JPanel());
-        left.add(object1 = new GenButton(new ImageIcon("src/slide/images/Octopus.png"),"Octopus",false));
-        left.add(new JPanel());
-        left.add(object2 = new GenButton(new ImageIcon("src/slide/images/Acorn.png"),"Acorn",false));
-        left.add(new JPanel());
-        left.add(object3 = new GenButton(new ImageIcon("src/slide/images/Ogre.png"),"Ogre",false));
-        testButtons.add(object1);
-        testButtons.add(object2);
-        testButtons.add(object3);
+        silly.correct();
 
-        right.add(object1 = new GenButton(new ImageIcon("src/slide/images/Icecream.png"),"Ice Cream",false));
-        right.add(new JPanel());
-        right.add(object2 = new GenButton(new ImageIcon("src/slide/images/Orange.png"),"Orange",false));
-        right.add(new JPanel());
-        right.add(object3 = new GenButton(new ImageIcon("src/slide/images/Umbrella.png"),"Umbrella",false));
-        right.add(new JPanel());
-        testButtons.add(object1);
-        testButtons.add(object2);
-        testButtons.add(object3);
+        /* Note for when Arnold opens this up later: Practice is working perfectly now, but the test slides are placing objects like before again. Check back,
+        * Order is 1-6 and it was exclusively the test slides.*/
 
-        JPanel middle = combinePanels(left,right);
+        JPanel middle = practiceButtons(object1,object2,object3,object4,object5,object6);
 
-        this.add(top,BorderLayout.NORTH);
-        this.add(middle,BorderLayout.CENTER);
-        this.add(bottom,BorderLayout.SOUTH);
+        this.add(top, BorderLayout.NORTH);
+        this.add(middle, BorderLayout.CENTER);
         this.setVisible(true);
-
 
 
     }
 
 
-    public void intro1(){
+    public void intro1() {
+        posInt = 0;
 
-        System.out.println("Making first intro slide");
-        this.setLayout(new GridLayout(0,1,35,0));
+        this.setLayout(new GridLayout(0, 1, 35, 0));
         JTextArea title = new JTextArea("  Welcome to the DET (Determiners in Eye Tracking) study!");
         JTextArea content1 = new JTextArea("  You will look at some pictures while reading/listening to sentences.");
         JTextArea content2 = new JTextArea("  There are 56 sentences, and you will get a break every 20 sentences.");
@@ -497,13 +496,13 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         JTextArea content7 = new JTextArea("  Your reaction time will be tracked too, so please go as fast as you can but DO NOT sacrifice accuracy.");
         JTextArea content8 = new JTextArea("  In case you change your mind about an answer, you can redo your answer.");
         JTextArea content9 = new JTextArea("  Please ask the experimenter any questions you have now.");
-        JPanel smallNext = new JPanel(new GridLayout(1,5));
-        for(int i = 0; i < 4; i++)
+        JPanel smallNext = new JPanel(new GridLayout(1, 5));
+        for (int i = 0; i < 4; i++)
             smallNext.add(new JPanel());
         smallNext.add(next);
 
         title.setFont(font);
-        title.setSize(200,200);
+        title.setSize(200, 200);
         title.setWrapStyleWord(true);
         title.setLineWrap(true);
         title.setOpaque(false);
@@ -511,63 +510,63 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
 
 
         content1.setFont(fontSmall);
-        content1.setSize(200,200);
+        content1.setSize(200, 200);
         content1.setWrapStyleWord(true);
         content1.setLineWrap(true);
         content1.setOpaque(false);
         content1.setEditable(false);
 
         content2.setFont(fontSmall);
-        content2.setSize(200,200);
+        content2.setSize(200, 200);
         content2.setWrapStyleWord(true);
         content2.setLineWrap(true);
         content2.setOpaque(false);
         content2.setEditable(false);
 
         content3.setFont(fontSmall);
-        content3.setSize(200,200);
+        content3.setSize(200, 200);
         content3.setWrapStyleWord(true);
         content3.setLineWrap(true);
         content3.setOpaque(false);
         content3.setEditable(false);
 
         content4.setFont(fontSmall);
-        content4.setSize(200,200);
+        content4.setSize(200, 200);
         content4.setWrapStyleWord(true);
         content4.setLineWrap(true);
         content4.setOpaque(false);
         content4.setEditable(false);
 
         content5.setFont(fontSmall);
-        content5.setSize(200,200);
+        content5.setSize(200, 200);
         content5.setWrapStyleWord(true);
         content5.setLineWrap(true);
         content5.setOpaque(false);
         content5.setEditable(false);
 
         content6.setFont(fontSmall);
-        content6.setSize(200,200);
+        content6.setSize(200, 200);
         content6.setWrapStyleWord(true);
         content6.setLineWrap(true);
         content6.setOpaque(false);
         content6.setEditable(false);
 
         content7.setFont(fontSmall);
-        content7.setSize(200,200);
+        content7.setSize(200, 200);
         content7.setWrapStyleWord(true);
         content7.setLineWrap(true);
         content7.setOpaque(false);
         content7.setEditable(false);
 
         content8.setFont(fontSmall);
-        content8.setSize(200,200);
+        content8.setSize(200, 200);
         content8.setWrapStyleWord(true);
         content8.setLineWrap(true);
         content8.setOpaque(false);
         content8.setEditable(false);
 
         content9.setFont(fontSmall);
-        content9.setSize(200,200);
+        content9.setSize(200, 200);
         content9.setWrapStyleWord(true);
         content9.setLineWrap(true);
         content9.setOpaque(false);
@@ -587,16 +586,16 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         this.setVisible(true);
 
 
-
     }
-    public void intro2(){
-        System.out.println("Making second intro slide");
-        this.setLayout(new GridLayout(4,1,35,0));
+
+    public void intro2() {
+        posInt = 1;
+        this.setLayout(new GridLayout(4, 1, 35, 0));
         JTextArea title2 = new JTextArea(("  Think Out Loud"));
         JTextArea sentence1 = new JTextArea("  Can you think out loud about how to add 2 by 2?");
         JTextArea sentence2 = new JTextArea("  Can you think out loud about how to multiply 12 by 10?");
-        JPanel smallNext = new JPanel(new GridLayout(1,5));
-        for(int i = 0; i < 4; i++)
+        JPanel smallNext = new JPanel(new GridLayout(1, 5));
+        for (int i = 0; i < 4; i++)
             smallNext.add(new JPanel());
         smallNext.add(next);
 
@@ -619,76 +618,77 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         sentence2.setEditable(false);
 
 
-
         this.add(title2);
         this.add(sentence1);
         this.add(sentence2);
         this.add(smallNext);
 
     }
-    public void intro3(){//calibration slide
-        this.setLayout(new BorderLayout(5,5));
-        JPanel calibration = new JPanel(new GridLayout(3,6));
+
+    public void intro3() {//calibration slide
+        posInt = 2;
+        this.setLayout(new BorderLayout(5, 5));
+        JPanel calibration = new JPanel(new GridLayout(3, 6));
         JTextArea sentence = new JTextArea("Eye Tracking Calibration - Please look at each picture as it appears. Please name it." +
                 "\n Click on it to listen to the word. Click on it again to continue.");
 
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Acorn.png"),"Acorn","src/slide/audio/Acorn.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Ambulance.png"),"Ambulance","src/slide/audio/Ambulance.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Anchor.png"),"Anchor","src/slide/audio/Anchor.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Ant.png"),"Ant","src/slide/audio/Ant.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Ape.png"),"Ape","src/slide/audio/Ape.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Apple.png"),"Apple","src/slide/audio/Apple.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Egg.png"),"Egg","src/slide/audio/Egg.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Eggplant.png"),"Eggplant","src/slide/audio/Eggplant.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Elephant.png"),"Elephant","src/slide/audio/Elephant.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Fish.png"),"Fish","src/slide/audio/Fishy.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Icecream.png"),"Ice Cream","src/slide/audio/Icecream.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Octopus.png"),"Octopus","src/slide/audio/Octopus.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Ogre.png"),"Ogre","src/slide/audio/Ogre.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Orange.png"),"Orange","src/slide/audio/Orange.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Owl.png"),"Owl","src/slide/audio/Owl.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Turtle.png"),"Turtle","src/slide/audio/Turtle.wav"));
-        testButtons.add(new GenButton(new ImageIcon("src/slide/images/Umbrella.png"),"Umbrella","src/slide/audio/Umbrella.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Acorn.png")), "Acorn", "Acorn.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Ambulance.png")), "Ambulance", "Ambulance.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Anchor.png")), "Anchor", "Anchor.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Ant.png")), "Ant", "Ant.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Ape.png")), "Ape", "Ape.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Apple.png")), "Apple", "Apple.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Egg.png")), "Egg", "Egg.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Eggplant.png")), "Eggplant", "Eggplant.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Elephant.png")), "Elephant", "Elephant.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Fish.png")), "Fishy", "Fishy.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Icecream.png")), "Ice Cream", "Icecream.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Octopus.png")), "Octopus", "Octopus.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Ogre.png")), "Ogre", "Ogre.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Orange.png")), "Orange", "Orange.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Owl.png")), "Owl", "Owl.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Turtle.png")), "Turtle", "Turtle.wav"));
+        testButtons.add(new GenButton(new ImageIcon(getClass().getResource("images/Umbrella.png")), "Umbrella", "Umbrella.wav"));
         testButtons.add(next);
-        sentence.setFont(new Font("Comic Sans MS",0,24));
+        sentence.setFont(new Font("Comic Sans MS", 0, 24));
         sentence.setWrapStyleWord(true);
         sentence.setLineWrap(true);
         sentence.setOpaque(false);
         sentence.setEditable(false);
 
 
-        this.add(sentence,BorderLayout.NORTH);
-        for(int i = 0; i< testButtons.size(); i++){
+        this.add(sentence, BorderLayout.NORTH);
+        for (int i = 0; i < testButtons.size(); i++) {
             testButtons.get(i).setVerticalTextPosition(SwingConstants.BOTTOM);
             testButtons.get(i).setHorizontalTextPosition(0);
-            testButtons.get(i).setPreferredSize(new Dimension(150,200));
+            testButtons.get(i).setPreferredSize(new Dimension(150, 200));
             testButtons.get(i).setVisible(true);
-            if(i != 0)
+            if (i != 0)
                 testButtons.get(i).setVisible(false);
             calibration.add(testButtons.get(i));
 
         }
-        this.add(calibration,BorderLayout.CENTER);
+        this.add(calibration, BorderLayout.CENTER);
         calibration.setVisible(true);
 
         this.setVisible(true);
 
     }
 
-    public void ready(){
-        this.setLayout(new GridLayout(0,1,35,0));
+    public void ready() {
+        this.setLayout(new GridLayout(0, 1, 35, 0));
         JTextArea r = new JTextArea("\t\tAre you Ready?");
 
         r.setFont(font);
-        r.setSize(200,200);
+        r.setSize(200, 200);
         r.setWrapStyleWord(true);
         r.setLineWrap(true);
         r.setOpaque(false);
         r.setEditable(false);
 
         //make gridlayout that centers the testButtons
-        JPanel practiceButton = new JPanel(new GridLayout(1,3));
-        JPanel calibButton = new JPanel(new GridLayout(1,3));
+        JPanel practiceButton = new JPanel(new GridLayout(1, 3));
+        JPanel calibButton = new JPanel(new GridLayout(1, 3));
 
 
         practiceButton.add(new JPanel());
@@ -697,21 +697,21 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         calibButton.add(new JPanel());
         calibButton.add(calib);
         calibButton.add(new JPanel());
-        practice.setFont(new Font("Comic Sans MS",0,30));
-        calib.setFont(new Font("Comic Sans MS",0,30));
+        practice.setFont(new Font("Comic Sans MS", 0, 30));
+        calib.setFont(new Font("Comic Sans MS", 0, 30));
 
 
         JTextArea start = new JTextArea("\t       Click 'Next' to begin the test slides!");
 
         start.setFont(font);
-        start.setSize(200,200);
+        start.setSize(200, 200);
         start.setWrapStyleWord(true);
         start.setLineWrap(true);
         start.setOpaque(false);
         start.setEditable(false);
 
-        JPanel smallNext = new JPanel(new GridLayout(1,5));
-        for(int i = 0; i < 4; i++)
+        JPanel smallNext = new JPanel(new GridLayout(1, 5));
+        for (int i = 0; i < 4; i++)
             smallNext.add(new JPanel());
         smallNext.add(next);
         this.add(r);
@@ -720,25 +720,26 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         this.add(start);
         this.add(smallNext);
     }
-    public void breakSlide(){
-        this.setLayout(new GridLayout(0,1,35,0));
+
+    public void breakSlide() {
+        this.setLayout(new GridLayout(0, 1, 35, 0));
         JTextArea r = new JTextArea("\t          Time to take a break!");
         JTextArea s = new JTextArea("\t     Let your eyes and fingers rest!");
-        JPanel smallNext = new JPanel(new GridLayout(1,5));
-        for(int i = 0; i < 4; i++)
+        JPanel smallNext = new JPanel(new GridLayout(1, 5));
+        for (int i = 0; i < 4; i++)
             smallNext.add(new JPanel());
         smallNext.add(next);
 
 
         r.setFont(font);
-        r.setSize(200,200);
+        r.setSize(200, 200);
         r.setWrapStyleWord(true);
         r.setLineWrap(true);
         r.setOpaque(false);
         r.setEditable(false);
 
         s.setFont(font);
-        s.setSize(200,200);
+        s.setSize(200, 200);
         s.setWrapStyleWord(true);
         s.setLineWrap(true);
         s.setOpaque(false);
@@ -749,12 +750,13 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         this.add(smallNext);
 
     }
-    public void endSlide(){
-        this.setLayout(new GridLayout(0,1,35,0));
+
+    public void endSlide() {
+        this.setLayout(new GridLayout(0, 1, 35, 0));
         JTextArea r = new JTextArea("\n\n\n\n\t        You've reached the end!\n\n\t        Thank you so much for participating!");
 
         r.setFont(font);
-        r.setSize(200,200);
+        r.setSize(200, 200);
         r.setWrapStyleWord(true);
         r.setLineWrap(true);
         r.setOpaque(false);
@@ -763,16 +765,8 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
     }
 
 
-
-
-
-
-
-
-
     public void mouseClicked(MouseEvent event) {
-        System.out.println(event.getX());
-        System.out.println(event.getY());
+
     }
 
     public void mousePressed(MouseEvent event) {
@@ -790,14 +784,16 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
     public void mouseExited(MouseEvent event) {
 
     }
+
     public void keyPressed(KeyEvent e) {
 
 
     }
-    public void keyTyped(KeyEvent e){
-        System.out.println(e);
+
+    public void keyTyped(KeyEvent e) {
+
         char key = e.getKeyChar();
-        switch(key){
+        switch (key) {
             case ' ':
                 sentenceButton.click();
                 break;
@@ -808,7 +804,8 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
                 silly.click();
                 break;
             case 'n'://next is always last button in list
-                next.click();
+                if(finished){
+                    next.click();}
                 break;
             case 'p'://Ready is always fifth
                 sentenceButton.click();
@@ -816,8 +813,220 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
 
         }
     }
-    public void keyReleased(KeyEvent e){
+
+    public void keyReleased(KeyEvent e) {
 
     }
 
+    public String toString() {
+        String completeString;
+
+        if (type.equals("practice")) {
+            completeString = "On Practice Slide \n Sentences: " + sentence1.strip() + "\t" + sentence2.strip() + "\n";
+            completeString += "Rule: " + rule + "\t Redo Clicked: " + redo.getClicks() + "\t Silly Clicked: " + silly.getClicks() + "\n";
+
+            completeString += "Starting Slide: " + (posInt + 3) + "\n\n";
+            for (int i = 0; i < 6; i += 2) {
+                completeString += testButtons.get(i).toString() + " \t " + testButtons.get(i + 1).toString();
+                completeString += "\n";
+            }
+
+        } else if (type.equals("test")) {
+            completeString = "On Slide " + posInt + "\n" + "Sentences: " + sentence1 + ", " + sentence2 + "\n";
+            completeString += "Rule: " + rule + "\t Redo Clicked: " + redo.getClicks() + "\t Silly Clicked: " + silly.getClicks() + "\n";
+            completeString += "Section target objects are on: " + targLeft + "\n";
+            if(1 <= posInt && posInt < 16){
+                completeString += "Starting Slide if unfinished test: 6\n\n";
+            }
+            else if(16 <= posInt && posInt < 31){
+                completeString += "Starting Slide if unfinished test: 23\n\n";
+            }
+            else if(31 <= posInt && posInt < 46){
+                completeString += "Starting Slide if unfinished test: 40\n\n";
+            }
+            else{
+                completeString += "Starting Slide if unfinished test: 57\n\n";
+            }
+            int size = testButtons.size();
+            int iterator = size / 3;
+            for (int i = 0; i < size; i += iterator) {
+/*                boolean answer = false;
+                for(int k = 0; k < iterator; k++){
+                    if(testButtons.get(k).toString().length() > 1){
+                        answer = true;
+                    }
+                }*/
+                /**
+                 * if(answer){ // CASE 2
+                 *         completeString += "\t";
+                 *         if(testButtons.get(i).toString().length > 3){
+                 *         completeString += testButtons.get(i).toString()+"\t";
+                 *         }else{
+                 *         completeString += testButtons.get(i).toString()+"\t\t";
+                 *          }
+                 * }else{
+                 *     completeString += "\t"+testButtons.get(i).toString() + "\t\t\t" + testButtons.get(i + 1).toString();
+                 * }
+                 *
+                 *
+                 *
+                 * if(answer){ // CASE 3
+                 *          completeString += "\t";
+                 *      if(testButtons.get(i).toString().length > 3 || testButtons.get(i+1).toString().length > 3 || testButtons.get(i+2).toString().length > 3){
+                 *          if(testButtons.get(i).toString().length > 3){
+                 *              completeString += testButtons.get(i)
+                 *          }else{
+                 *
+                 *          }
+                 *          if(targLeft.equals("Left")){
+                 *
+                 *          }else{
+                 *
+                 *          }
+                 *      }
+                 *
+                 * }else{
+                 * }
+                 */
+
+                switch (iterator) {
+                    case 2:
+                        completeString += "\t"+testButtons.get(i).toString() + "\t\t\t" + testButtons.get(i + 1).toString();
+                        break;
+                    case 3:
+                        if (targLeft.equals("Left")) {
+                            if(targInt == 3)
+                                completeString += "\t"+testButtons.get(i).toString() + "\t\t\t\t" + testButtons.get(i + 1).toString() + "\t\t" + testButtons.get(i + 2).toString();
+                            else
+                                completeString += "\t"+testButtons.get(i).toString() + "\t\t" + testButtons.get(i + 1).toString() + "\t\t\t\t" + testButtons.get(i + 2).toString();
+                        } else {
+                            if(distInt == 6)
+                            completeString += "\t"+testButtons.get(i).toString() + "\t\t" + testButtons.get(i + 1).toString() + "\t\t\t\t" + testButtons.get(i + 2).toString();
+                            else
+                                completeString += "\t"+testButtons.get(i).toString() + "\t\t\t\t" + testButtons.get(i + 1).toString() + "\t\t" + testButtons.get(i + 2).toString();
+                        }
+                        break;
+                    case 4:
+                        completeString += "\t"+testButtons.get(i).toString() + "\t\t" + testButtons.get(i + 1) + "\t\t\t\t" + testButtons.get(i + 2).toString() + "\t\t" + testButtons.get(i + 3).toString();
+                        break;
+                }
+                completeString += "\n\n";
+            }
+        } else {
+            completeString = "On Slide " + posInt + "\n";
+            completeString += "Not Practice or Test Slide.\n";
+            completeString += "Starting Slide: " + (posInt) + "\n\n";
+        }
+        return completeString;
+    }
+    private String rightClick(String clicked, String cursor){
+        String reaction = "";
+        if(clicked.equals("1") && cursor.equals("Fishy")){
+            reaction += ProgramManager.records[3]+",";
+        }
+        else if(clicked.equals("0") && cursor.equals("Fishy")){
+            reaction += ProgramManager.records[4] + ",";
+        }
+        else if(clicked.equals("1") && cursor.equals("Turtle")){
+            reaction += ProgramManager.records[4]+",";
+        }
+        else{
+            reaction += ProgramManager.records[3]+",";
+        }
+        return reaction;
+    }
+    private String objType(GenButton t){
+        if(t.getType().equals("target")){
+            return "1,";
+        }
+        else{
+            return "0,";
+        }
+    }
+
+    public String toCSV(String id, String order) {
+        int numObjects = 0;
+        boolean same = false;
+        String completeString = id + "," + order + "," + type + "," + position + "," + rule + "," +
+                ProgramManager.records[0] + ",";
+        for (int i = 0; i < testButtons.size(); i++) {
+            String result = testButtons.get(i).toString();
+            if (!result.equals("0")) {
+                if (result.length() > 6) {//one object clicked twice
+                    numObjects = 1;
+                    same = true;
+                    String[] results = result.split(",");
+                    String result1 = results[0];
+                    String result2 = results[1];
+                    //cursor check 1
+                    completeString += result1.substring(0,1)+",";
+                    completeString += objType(testButtons.get(i));
+                    completeString += rightClick(result1.substring(0,1),sentCurs1);
+                    completeString += ProgramManager.records[1]+",";//adding first Char to Obj
+                    completeString += result2.strip().substring(0,1) + ",";
+                    completeString += objType(testButtons.get(i));
+                    completeString += rightClick(result2.strip().substring(0,1),sentCurs2);
+                    completeString += ProgramManager.records[2]+",";//adding first Char to Obj
+
+
+                    break;
+                } else if (result.length() == 3) {//two objects clicked once
+                    System.out.println(result.substring(0,1));
+                    completeString += result.substring(0,1)+",";
+                    /*if(result.substring(result.length()-1).equals("1")){
+                        if(testButtons.get(i).isFirstVis()){
+                            completeString+= "1,";
+                        }
+                        else{
+                            completeString += "0,";
+                        }
+                    }
+                    else{
+                        if(testButtons.get(i).isSecVis()){
+                            completeString+= "1,";
+                        }
+                        else{
+                            completeString += "0,";
+                        }
+                    }*/
+                    System.out.println(objType(testButtons.get(i)));
+                    completeString += objType(testButtons.get(i));
+
+                    if(numObjects ==0){
+                        completeString += rightClick(result.substring(0,1),sentCurs1);
+                        completeString += ProgramManager.records[1]+",";
+                    }
+                    else if(numObjects ==1){
+                        completeString += rightClick(result.substring(0,1),sentCurs2);
+                        completeString += ProgramManager.records[2]+",";
+                    }
+                    same = false;
+                    numObjects++;
+                }
+            }
+        }
+        if (numObjects == 0) {
+            completeString += "-1,-1,-1,-1,-1,-1,-1,-1,-1,";
+        }
+        if (numObjects == 1 && !same){
+            completeString += "-1,-1,-1,-1,-1,";
+        } else if (numObjects == 2) {
+            completeString += "0,";
+        }
+        else if(same){
+            completeString += "1,";
+        }
+        if (silly.isClicked()) {
+            completeString += "1," + ProgramManager.records[5] + ",";
+        } else {
+            completeString += "0,-1,";
+        }
+        if (redo.getClicks() > 0) {
+            completeString += "1\n";
+        } else {
+            completeString += "0\n";
+        }
+
+        return completeString;
+    }
 }

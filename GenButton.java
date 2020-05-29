@@ -11,28 +11,21 @@ import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class GenButton extends JButton implements MouseListener, MouseMotionListener {
-
-    public void mouseDragged(MouseEvent e) {
-
-    }
-
-    public void mouseMoved(MouseEvent e) {
-
-    }
+public class GenButton extends JButton implements MouseListener {
 
     private ArrayList<String> recordsForFile = new ArrayList<>();
     boolean deselected;
-    private String type, sentence1, sentence2, practiceSentence, name;//What kind of button it is --Target or Distractor
-    private boolean correct, clicked, ready = false, visited = false, firstVis, secVis = false;//whether this button with image is correct or not
-    private int numClicks = 0, curX, curY;
+    private String type, sentence1, sentence2, practiceSentence;//What kind of button it is --Target or Distractor
+    private boolean correct, clicked, ready = false, visited = false,secVis=false;//whether this button with image is correct or not
+    private int numClicks = 0,audOneClicks = 0,audTwoClicks = 0, obj;
     private String audioFileName1, audio2;
     private Font font = new Font("Comic Sans MS", 0, 40);
 
 
     public GenButton(Icon character, String characterName, String audio) {//constructor for calibration
         super(characterName, character);
-
+        //calibration means the slide where every object button is introduced. They
+        //each have their own name as text, and audio that plays when clicked.
 
         this.setFont(new Font("Comic Sans MS", 0, 24));
         audioFileName1 = audio;
@@ -40,27 +33,35 @@ public class GenButton extends JButton implements MouseListener, MouseMotionList
         type = "calibration";
         //character for imageIcon and caption
         //type for
-        //whethor correct or not
+        //whether correct or not
         //audio for audio file
     }
 
-    public GenButton(Icon picture, String name, boolean corr) {//Constructor for non-calibration testButtons
+    public GenButton(Icon picture, boolean corr, int objNum) {//Constructor for non-calibration testButtons
         super(picture);
         if (corr) {
             type = "target";
         } else {
             type = "distract";
         }
-        this.removeMouseMotionListener(this);
-        this.name = name;
         correct = corr;
+        obj = objNum;
         addMouseListener(this);
 
 
     }
+    public int getObj(){return obj;}
 
     public String getType() {
         return type;
+    }
+
+    public int getAudOneClicks() {
+        return audOneClicks;
+    }
+
+    public int getAudTwoClicks() {
+        return audTwoClicks;
     }
 
     public GenButton(Icon icon, String content) {//for Redo, Silly testButtons
@@ -86,7 +87,7 @@ public class GenButton extends JButton implements MouseListener, MouseMotionList
             type = "next";
     }
 
-    public GenButton(Icon icon, String name, String sen1, String sen2, String sen3, String aud1, String aud2) { //for sentence testButtons
+    public GenButton(Icon icon, String sen1, String sen2, String sen3, String aud1, String aud2) { //for sentence testButtons
         super(icon);
         addMouseListener(this);
         practiceSentence = sen3;
@@ -97,7 +98,7 @@ public class GenButton extends JButton implements MouseListener, MouseMotionList
         audio2 = aud2;
     }
 
-    public GenButton(String sentence, String typ) {
+    public GenButton(String sentence, String typ) {//buttons for redo practice or calibration
         super(sentence);
         type = typ;
         addMouseListener(this);
@@ -108,7 +109,7 @@ public class GenButton extends JButton implements MouseListener, MouseMotionList
         return ready;
     }
 
-    public void advanceSentence() {
+    public void advanceSentence() {//puts the next sentence on sentence button
         this.setIcon(null);
         this.setText(null);
         this.setText(sentence2);
@@ -117,7 +118,7 @@ public class GenButton extends JButton implements MouseListener, MouseMotionList
         ProgramManager.reactionMeasure("1ObjSent");
     }
 
-    public void pracSent() {
+    public void pracSent() {//in case it's a practice slide
         this.setText(null);
         this.setText(practiceSentence);
         this.setFont(font);
@@ -127,44 +128,46 @@ public class GenButton extends JButton implements MouseListener, MouseMotionList
         numClicks++;
     }
 
-    public void click() {
+    public void click() {//general method when a button is clicked
         clicked = true;
         numClicks++;
         visited = false;
         if (numClicks == 1 && (type.equals("sentences") || type.equals("calibration"))) {
-            if (type.equals("sentences")) {
+            if (type.equals("sentences")) {//if sentence button
                 this.setIcon(null);
                 this.setText(sentence1);
                 this.setFont(font);
                 this.ready = true;
                 ProgramManager.reactionMeasure("Ready");
-            } else if (type.equals("calibration"))
+            } else {
                 playSound(this.audioFileName1);
+                audOneClicks++;
+            }
         } else if (numClicks >= 2) {
             if (type.equals("sentences")) {
                 if (this.getText().equals(sentence1)) {
                     playSound(this.audioFileName1);
+                    audOneClicks++;
                 } else {
                     playSound(audio2);
+                    audTwoClicks++;
                 }
+            }else if(type.equals("calibration") && numClicks > 2){//if calibration button
+                playSound(this.audioFileName1);
+                audOneClicks++;
             }
         }
     }
 
-    public void recordClick(boolean cursor, int sentenceNum) {
+    public void recordClick(boolean cursor, int sentenceNum) {//store information in button for txt file
         String temp = "";
-        if (cursor) {
+        if (cursor) {//if cursor user used was the right one for the sentence
             temp += "1";
 
         } else {
             temp += "0";
         }
         temp += "-" + sentenceNum;
-        if (numClicks == 1) {
-            firstVis = correct;
-        } else if (numClicks == 2) {
-            secVis = correct;
-        }
         recordsForFile.add(temp);
     }
 
@@ -180,10 +183,6 @@ public class GenButton extends JButton implements MouseListener, MouseMotionList
         visited = true;
     }
 
-    public void sameVisit() {
-        clicked = false;
-    }
-
     public boolean isCorrect() {
         return correct;
     }
@@ -192,20 +191,12 @@ public class GenButton extends JButton implements MouseListener, MouseMotionList
         secVis = false;
     }
 
+    public void correct(){secVis = true;}
+
     public void changeCorrect() {
-        correct = true;
         type = "target";
         secVis = true;
     }
-
-    public void changeInCorrect() {
-        correct = false;
-    }
-
-    public boolean isFirstVis() {
-        return firstVis;
-    }
-
     public boolean isSecVis() {
         return secVis;
     }
@@ -241,7 +232,7 @@ public class GenButton extends JButton implements MouseListener, MouseMotionList
     }
     /*Method for playing the sound*/
 
-    public static void playSound(String filename) {
+    public static void playSound(String filename) {//method to play audio
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src/slide/audio/" + filename));
             Clip clip = AudioSystem.getClip();
@@ -255,25 +246,11 @@ public class GenButton extends JButton implements MouseListener, MouseMotionList
 
 
     public void mousePressed(MouseEvent e) {/**/}
-
-    public void mouseReleased(MouseEvent e) {
-        /*Assess correct click, alert message otherwise*/
-    }
-
-    public void mouseClicked(MouseEvent e) {
-        curX = e.getX();
-        curY = e.getY();
-        //System.out.println(curX);
-        //System.out.println(curY);
-        click();
-
-        /**/
-    }
-
+    public void mouseReleased(MouseEvent e) { }
+    public void mouseClicked(MouseEvent e) { click(); }
     public void mouseEntered(MouseEvent e) {
         deselected = false;
     }
-
     public void mouseExited(MouseEvent e) {
         deselected = true;
     }

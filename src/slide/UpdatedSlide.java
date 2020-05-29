@@ -1,4 +1,4 @@
-package slide;
+package src.slide;
 
 import javax.swing.*;
 import java.awt.*;

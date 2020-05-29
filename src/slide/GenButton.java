@@ -1,4 +1,4 @@
-package slide;
+package src.slide;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;

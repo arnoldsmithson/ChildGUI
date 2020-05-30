@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 public class GenButton extends JButton implements MouseListener {
 
+
     private ArrayList<String> recordsForFile = new ArrayList<>();
     boolean deselected;
     private String type, sentence1, sentence2, practiceSentence;//What kind of button it is --Target or Distractor

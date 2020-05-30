@@ -989,7 +989,31 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         }
         //after analyzing all the buttons, the rest of the line follows
         if(buttonPressed1.equals("") && buttonPressed2.equals("")){
-            completeString += "-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,";
+            //sixth and 7th -1's are sentence 1 audio, 12th and 13th are sentence 2 audio
+            completeString += "-1,-1,-1,-1,";
+            if(sentenceButton != null){
+                if(sentenceButton.getAudOneClicks() > 0){
+                    completeString += "1,";
+                    completeString += sentenceButton.getAudOneClicks() + ",";
+                }else{
+                    completeString += "0,-1,";
+                }
+            }else{
+                completeString += "-1,-1,";
+            }
+
+            completeString += "-1,-1,-1,-1,";
+            if(sentenceButton != null){
+                if(sentenceButton.getAudTwoClicks() > 0){
+                    completeString += "1,";
+                    completeString += sentenceButton.getAudTwoClicks() + ",";
+                }else{
+                    completeString += "0,-1,";
+                }
+            }else{
+                completeString += "-1,-1,";
+            }
+
             completeString += ProgramManager.records[6]+",";//2nd char/silly to Next
             completeString += "-1,";
         }

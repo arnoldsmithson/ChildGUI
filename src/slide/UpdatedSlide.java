@@ -258,7 +258,7 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
      */
     public void setNext() {
         if (type.equals("practice")) {
-            sentenceButton.pracSent();//move to rule sentence for practice
+            sentenceButton.pracSent(practiceAudio);//move to rule sentence for practice
             GenButton.playSound(practiceAudio);//play its audio
             next.setVisible(true);
             finished = true;

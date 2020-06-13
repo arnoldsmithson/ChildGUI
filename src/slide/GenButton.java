@@ -17,7 +17,7 @@ public class GenButton extends JButton implements MouseListener {
     private ArrayList<String> recordsForFile = new ArrayList<>();
     boolean deselected;
     private String type, sentence1, sentence2, practiceSentence;//What kind of button it is --Target or Distractor
-    private boolean correct, clicked, ready = false, visited = false,secVis=false;//whether this button with image is correct or not
+    private boolean done=false,correct, clicked, ready = false, visited = false,secVis=false;//whether this button with image is correct or not
     private int numClicks = 0,audOneClicks = 0,audTwoClicks = 0, obj;
     private String audioFileName1, audio2;
     private Font font = new Font("Comic Sans MS", 0, 40);
@@ -119,10 +119,12 @@ public class GenButton extends JButton implements MouseListener {
         ProgramManager.reactionMeasure("1ObjSent");
     }
 
-    public void pracSent() {//in case it's a practice slide
+    public void pracSent(String practiceAud) {//in case it's a practice slide
         this.setText(null);
         this.setText(practiceSentence);
         this.setFont(font);
+        audio2 = practiceAud;
+        done = true;
     }
 
     public void increaseClicks() {
@@ -151,7 +153,8 @@ public class GenButton extends JButton implements MouseListener {
                     audOneClicks++;
                 } else {
                     playSound(audio2);
-                    audTwoClicks++;
+                    if(!done)
+                        audTwoClicks++;
                 }
             }else if(type.equals("calibration") && numClicks > 2){//if calibration button
                 playSound(this.audioFileName1);

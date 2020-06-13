@@ -200,11 +200,33 @@ public class ProgramManager extends JFrame {
                 bYea -= 1;//if the current month is behind the birth month
             }
             long bMon = ChronoUnit.MONTHS.between(birthday, today) % 12;
-            System.out.println(myCal.get(Calendar.DAY_OF_MONTH));
-            System.out.println(dates[1]);
-            long bd = myCal.get(Calendar.DAY_OF_MONTH) - dates[1];
-            if (bd < 0)//if the day of month minus birth day is negative
-                bd *= -1;
+            long bd;
+            //NEW DAY CALCULATION
+            if(myCal.get(Calendar.DAY_OF_MONTH) <= dates[1]){
+                bd = dates[1] - myCal.get(Calendar.DAY_OF_MONTH);
+            } else{
+                switch(myCal.get(Calendar.MONTH)){
+                    case 4:
+                        bd = dates[1] + (30 - myCal.get(Calendar.DAY_OF_MONTH));
+                        break;
+                    case 2:
+                        bd = dates[1] + (28 - myCal.get(Calendar.DAY_OF_MONTH));
+                        break;
+                    case 6:
+                        bd = dates[1] + (30 - myCal.get(Calendar.DAY_OF_MONTH));
+                        break;
+                    case 9:
+                        bd = dates[1] + (30 - myCal.get(Calendar.DAY_OF_MONTH));
+                        break;
+                    case 11:
+                        bd = dates[1] + (30 - myCal.get(Calendar.DAY_OF_MONTH));
+                        break;
+                    default:
+                        bd = dates[1] + (31 - myCal.get(Calendar.DAY_OF_MONTH));
+                        break;
+
+                }
+            }
 
 
             //finishing stat collection
@@ -894,6 +916,7 @@ public class ProgramManager extends JFrame {
             }
         } catch (Exception e) {
             System.out.println("Bad wrap");
+            System.err.println(e);
         }
         //add end slides after all test slides have been read
         slideOrder13.add(new UpdatedSlide("end", numSlides13));

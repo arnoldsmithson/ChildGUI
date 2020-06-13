@@ -94,7 +94,7 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         logicRule = compRule;
         position = spot.strip();
         this.rule = rule.strip();
-        String[] temp = sentenceBlock.strip().split("and");
+        String[] temp = sentenceBlock.strip().split("&");
         String[] sentSplit = temp[0].split(" ");
         String[] sent2Split = temp[1].split(" ");
         sentCurs1 = sentSplit[0].strip();
@@ -103,7 +103,7 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         sentence1 = temp[0];
         sentence2 = temp[1];
 
-        sentCurs2 = sentence2.split(" ")[1].strip();
+        sentCurs2 = sentence2.split(" ")[2].strip();
         audio1 = aud1.strip();
         if (aud2 != null)
             // Turtle clicks the same orange.
@@ -163,7 +163,7 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         logicRule = compRule;
         position = spot.strip();
         posInt = Integer.parseInt(position);
-        String[] temp = sentenceBlock.strip().split("and");
+        String[] temp = sentenceBlock.strip().split("&");
         sentence1 = temp[0];
         String[] sentSplit = sentence1.strip().split(" ");
         target = sentSplit[2];
@@ -293,9 +293,9 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
             ne = new UpdatedSlide(type,posInt);
         } else if (type.equals("practice")) {
 
-            ne = new UpdatedSlide(position, sentence1 + " and" + sentence2, audio1, audio2, logicRule,practiceAudio);
+            ne = new UpdatedSlide(position, sentence1 + " &" + sentence2, audio1, audio2, logicRule,practiceAudio);
         } else {//type equals test
-            ne = new UpdatedSlide(position, rule, sentence1 + " and" + sentence2, audio1, audio2, targetAmt, targLeft, distract, distAmt, logicRule);
+            ne = new UpdatedSlide(position, rule, sentence1 + " &" + sentence2, audio1, audio2, targetAmt, targLeft, distract, distAmt, logicRule);
         }
         this.addMouseListener(ne);
         this.addKeyListener(ne);

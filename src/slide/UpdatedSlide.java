@@ -1025,7 +1025,13 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
             }else{
                 completeString += "0,-1,";
             }
-            completeString += "-1,-1,-1,-1,0,-1,";
+            completeString += "-1,-1,-1,-1,";
+            if(sentenceButton.getAudTwoClicks() > 0){
+                completeString += "1,";
+                completeString += sentenceButton.getAudOneClicks() + ",";
+            }else{
+                completeString += "0,-1,";
+            }
             //add 0,-1 here for no audio 2
             completeString += ProgramManager.records[6]+",";//2nd char/silly to Next
             completeString += "-1,";

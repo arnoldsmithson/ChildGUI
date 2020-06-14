@@ -202,31 +202,32 @@ public class ProgramManager extends JFrame {
             long bMon = ChronoUnit.MONTHS.between(birthday, today) % 12;
             long bd;
             //NEW DAY CALCULATION
-            if(myCal.get(Calendar.DAY_OF_MONTH) <= dates[1]){
-                bd = dates[1] - myCal.get(Calendar.DAY_OF_MONTH);
+            if(myCal.get(Calendar.DAY_OF_MONTH) >= dates[1]){
+                bd = myCal.get(Calendar.DAY_OF_MONTH) - dates[1];
             } else{
-                switch(myCal.get(Calendar.MONTH)){
+                switch((int) bMon){
                     case 4:
-                        bd = dates[1] + (30 - myCal.get(Calendar.DAY_OF_MONTH));
+                        bd =  (30 - (dates[1] - myCal.get(Calendar.DAY_OF_MONTH)))+1;
                         break;
                     case 2:
-                        bd = dates[1] + (28 - myCal.get(Calendar.DAY_OF_MONTH));
+                        bd = (28 - (dates[1] - myCal.get(Calendar.DAY_OF_MONTH)))+1;
                         break;
                     case 6:
-                        bd = dates[1] + (30 - myCal.get(Calendar.DAY_OF_MONTH));
+                        bd = (30 - (dates[1] - myCal.get(Calendar.DAY_OF_MONTH)))+1;
                         break;
                     case 9:
-                        bd = dates[1] + (30 - myCal.get(Calendar.DAY_OF_MONTH));
+                        bd = (30 - (dates[1] - myCal.get(Calendar.DAY_OF_MONTH)))+1;
                         break;
                     case 11:
-                        bd = dates[1] + (30 - myCal.get(Calendar.DAY_OF_MONTH));
+                        bd = (30 - (dates[1] - myCal.get(Calendar.DAY_OF_MONTH)))+1;
                         break;
                     default:
-                        bd = dates[1] + (31 - myCal.get(Calendar.DAY_OF_MONTH));
+                        bd = (31 - (dates[1] - myCal.get(Calendar.DAY_OF_MONTH)))+1;
                         break;
 
                 }
             }
+
 
 
             //finishing stat collection

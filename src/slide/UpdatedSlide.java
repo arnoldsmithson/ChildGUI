@@ -172,7 +172,7 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         sentence2 = temp[1];
         audio1 = aud1.strip();
         audio2 = aud2.strip();
-        if(logicRule.equals("same") || logicRule.equals("different"))
+        if(logicRule.strip().equals("same") || logicRule.strip().equals("different"))
             sentence1 = sentence1.replace('.',',');
 
         if(seeAudio.length() > 20)

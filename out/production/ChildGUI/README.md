@@ -2,7 +2,9 @@
 
 ### Disclaimer
 
-*This program has been created for research purposes for Professor Nadezhda Modyanova, a Professor at MSU affiliated with the Jake Jabs College of Business and Entrepeneurship. If this program is meant to be used or modified outside of her research project, please contact Nadezhda at nadezhda.modyanova@montana.edu .*
+*This program has been created for research purposes for Dr. Nadezhda (Nadya) Modyanova (https://nmodyanova.wordpress.com/ ), affiliated with the Jake Jabs College of Business and Entrepreneurship at Montana State University, and with the Pennington Educational Research Laboratory (http://www.montana.edu/perl/ ) of College of Education, Health and Human Development at Montana State University. If this program, images, audio, and/or input text are meant to be used or modified outside of her research project, please contact Nadya at nadezhda.modyanova@montana.edu  and nnm@alum.mit.edu .*
+
+
 
 This program's goal is to guide a young demographic through a series of slides that test's their ability to distinguish whether two sentences are referring to one object or two. The process is as follows: 
 
@@ -35,4 +37,6 @@ These slides continually test the subject's ability while recording their click 
 
 # Disclaimer
 
-This program has been created for research purposes for Professor Nadezhda Modyanova, a Professor at MSU affiliated with the Jake Jabs College of Business and Entrepeneurship. If this program is meant to be used or modified outside of her research project, please contact Nadezhda at nadezhda.modyanova@montana.edu .
+*This program has been created for research purposes for Dr. Nadezhda (Nadya) Modyanova (https://nmodyanova.wordpress.com/ ), affiliated with the Jake Jabs College of Business and Entrepreneurship at Montana State University, and with the Pennington Educational Research Laboratory (http://www.montana.edu/perl/ ) of College of Education, Health and Human Development at Montana State University. If this program, images, audio, and/or input text are meant to be used or modified outside of her research project, please contact Nadya at nadezhda.modyanova@montana.edu  and nnm@alum.mit.edu .*
+
+

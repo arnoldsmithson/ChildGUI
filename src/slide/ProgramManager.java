@@ -183,7 +183,6 @@ public class ProgramManager extends JFrame {
             //BIRTHDAY DECIMAL - Accurate to .01, give or take .01 in years for rounding
             String[] sections = bday.split("/");
             int[] dates = new int[3];
-            System.out.println(bday);
             dates[0] = Integer.parseInt(sections[0]);
             dates[1] = Integer.parseInt(sections[1]);
             dates[2] = Integer.parseInt(sections[2]);

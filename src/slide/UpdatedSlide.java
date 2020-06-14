@@ -102,6 +102,8 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         target = sentSplit[3].substring(0, 1).toUpperCase() + sentSplit[3].substring(1, sentSplit[3].length() - 1);
         sentence1 = temp[0];
         sentence2 = temp[1];
+        if(logicRule.strip().equals("same") || logicRule.strip().equals("different"))
+            sentence1 = sentence1.replace('.',',');
 
         sentCurs2 = sentence2.split(" ")[2].strip();
         audio1 = aud1.strip();
@@ -170,6 +172,8 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         sentence2 = temp[1];
         audio1 = aud1.strip();
         audio2 = aud2.strip();
+        if(logicRule.equals("same") || logicRule.equals("different"))
+            sentence1 = sentence1.replace('.',',');
 
         if(seeAudio.length() > 20)
             practiceAudio = seeAudio.strip().split(" ")[8];

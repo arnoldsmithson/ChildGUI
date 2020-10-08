@@ -820,7 +820,6 @@ public class ProgramManager extends JFrame implements WindowListener, WindowStat
                 }
             }
         }
-
     }
 
     /**

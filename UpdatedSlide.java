@@ -900,7 +900,7 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         char key = e.getKeyChar();
         switch (key) {
             case ' ':
-                if(type.equals("test"))
+                if(type.equals("test") || type.equals("practice"))
                     sentenceButton.click();
                 break;
             case 'r'://redo is always first
@@ -914,7 +914,7 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
                     next.click();}
                 break;
             case 'p'://Ready is always fifth
-                if(type.equals("test"))
+                if(type.equals("test") || type.equals("practice"))
                     sentenceButton.click();
                 break;
 
@@ -946,56 +946,106 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
             completeString = "On Slide " + posInt + "\n" + "Sentences: " + sentence1 + ", " + sentence2 + "\n";
             completeString += "Rule: " + rule + "\t Redo Clicked: " + redo.getClicks() + "\t Silly Clicked: " + silly.getClicks() + "\n";
             completeString += "Section target objects are on: " + targLeft + "\n";
-            if(1 <= posInt && posInt < 15){//restart at selected break slide
+            if (1 <= posInt && posInt < 15) {//restart at selected break slide
                 completeString += "Starting Slide if unfinished test (with break slides taken into account): 6\n\n";
-            }
-            else if(15 <= posInt && posInt < 30){
+            } else if (15 <= posInt && posInt < 30) {
                 completeString += "Starting Slide if unfinished test (with break slides taken into account): 23\n\n";
-            }
-            else if(30 <= posInt && posInt < 45){
+            } else if (30 <= posInt && posInt < 45) {
                 completeString += "Starting Position if unfinished test: 40\n\n";
-            }
-            else if(45 <= posInt && posInt < 60){
+            } else if (45 <= posInt && posInt < 60) {
                 completeString += "Starting Position if unfinished test: 57\n\n";
-            }
-            else if(60 <= posInt && posInt < 75){
+            } else if (60 <= posInt && posInt < 75) {
                 completeString += "Starting Position if unfinished test: 74\n\n";
-            }
-            else if(75 <= posInt && posInt < 90){
+            } else if (75 <= posInt && posInt < 90) {
                 completeString += "Starting Position if unfinished test: 91\n\n";
-            }
-            else if(90 <= posInt && posInt < 105){
+            } else if (90 <= posInt && posInt < 105) {
                 completeString += "Starting Position if unfinished test: 108\n\n";
-            }
-            else{
+            } else {
                 completeString += "Starting Position if unfinished test: 125\n\n";
             }
             int size = testButtons.size();//check which buttons were pressed
             int iterator = size / 3; // how many buttons per row for iteration
-            for (int i = 0; i < size; i += iterator) {
-                switch (iterator) {
-                    case 2://if two buttons per row
-                        completeString += "\t"+testButtons.get(i).toString() + "\t\t\t" + testButtons.get(i + 1).toString();
+            if(distInt + targInt == 2 || distInt + targInt == 4 || distInt + targInt == 7){
+                switch(distInt + targInt){
+                    case 2:
+                        completeString += "\n\n\t"+testButtons.get(2).toString() + "\t\t\t" + testButtons.get(3).toString()+"\n\n";
                         break;
-                    case 3://if three buttons
-                        if (targLeft.equals("Left")) {//if targets on left
-                            if(targInt == 3)
-                                completeString += "\t"+testButtons.get(i).toString() + "\t\t\t\t" + testButtons.get(i + 1).toString() + "\t\t" + testButtons.get(i + 2).toString();
-                            else
-                                completeString += "\t"+testButtons.get(i).toString() + "\t\t" + testButtons.get(i + 1).toString() + "\t\t\t\t" + testButtons.get(i + 2).toString();
-                        } else { //if targets on right
-                            if(distInt == 6)
-                                completeString += "\t"+testButtons.get(i).toString() + "\t\t" + testButtons.get(i + 1).toString() + "\t\t\t\t" + testButtons.get(i + 2).toString();
-                            else
-                                completeString += "\t"+testButtons.get(i).toString() + "\t\t\t\t" + testButtons.get(i + 1).toString() + "\t\t" + testButtons.get(i + 2).toString();
+                    case 4:
+                        if(targLeft.equals("Left")){
+                            if(targInt == 3){
+                                completeString += "\t"+testButtons.get(0).toString() +"\n\n" + //Empty One Spot
+                                                  "\t"+testButtons.get(2).toString() + "\t\t\t" + testButtons.get(3).toString()+"\n\n" +
+                                                  "\t"+testButtons.get(4).toString() +"\n\n"; //Empty Five Spot
+                            }else{
+                                completeString +=                                      "\t\t\t\t"+testButtons.get(1).toString() +"\n\n" +
+                                                  "\t"+testButtons.get(2).toString() + "\t\t\t" + testButtons.get(3).toString()+"\n\n" +
+                                                                                       "\t\t\t\t"+testButtons.get(5).toString() +"\n\n";
+                            }
+                        } else{
+                            if(distInt == 3){
+                                completeString += "\t"+testButtons.get(0).toString() +"\n\n" + //Empty One Spot
+                                                  "\t"+testButtons.get(2).toString() + "\t\t\t" + testButtons.get(3).toString()+"\n\n" +
+                                                  "\t"+testButtons.get(4).toString() +"\n\n"; //Empty Five Spot
+                            }else{
+                                completeString += /*Empty Zero Spot*/                  "\t\t\t\t"+testButtons.get(1).toString() +"\n\n" +
+                                                  "\t"+testButtons.get(2).toString() + "\t\t\t" + testButtons.get(3).toString()+"\n\n" +
+                                                  /*Empty Four Spot*/                  "\t\t\t\t"+testButtons.get(5).toString() +"\n\n";
+                            }
                         }
                         break;
-                    case 4://if four buttons per row
-                        completeString += "\t"+testButtons.get(i).toString() + "\t\t" + testButtons.get(i + 1) + "\t\t\t\t" + testButtons.get(i + 2).toString() + "\t\t" + testButtons.get(i + 3).toString();
+                    case 7:
+                        if(targLeft.equals("Left")){
+                            if(targInt == 6){
+                                completeString += "\t" + testButtons.get(0).toString() + "\t\t" + testButtons.get(1).toString() + "\n\n"; //Empty Two Spot
+                                completeString += "\t" + testButtons.get(3).toString() + "\t\t" + testButtons.get(4).toString() + "\t\t\t\t" + testButtons.get(5).toString()+"\n\n";
+                                completeString += "\t" + testButtons.get(6).toString() + "\t\t" + testButtons.get(7).toString() + "\n\n"; //Empty Eight Spot
+
+                            }else{
+                                completeString +=                                        "\t\t\t\t\t" + testButtons.get(1).toString() + "\t\t" + testButtons.get(2).toString() + "\n\n";
+                                completeString += "\t" + testButtons.get(3).toString() + "\t\t\t\t" + testButtons.get(4).toString() + "\t\t" + testButtons.get(5).toString()+"\n\n";
+                                completeString +=                                        "\t\t\t\t\t" + testButtons.get(7).toString() + "\t\t" + testButtons.get(8).toString() + "\n\n";
+                            }
+                        } else{
+                            if(distInt == 6){
+                                completeString += "\t" + testButtons.get(0).toString() + "\t\t" + testButtons.get(1).toString() + "\n\n"; //Empty Two Spot
+                                completeString += "\t" + testButtons.get(3).toString() + "\t\t" + testButtons.get(4).toString() + "\t\t\t\t" + testButtons.get(5).toString()+"\n\n";
+                                completeString += "\t" + testButtons.get(6).toString() + "\t\t" + testButtons.get(7).toString() + "\n\n"; //Empty Eight Spot
+
+                            }else{
+                                completeString +=                                        "\t\t\t\t\t" + testButtons.get(1).toString() + "\t\t" + testButtons.get(2).toString() + "\n\n";
+                                completeString += "\t" + testButtons.get(3).toString() + "\t\t\t\t" + testButtons.get(4).toString() + "\t\t" + testButtons.get(5).toString()+"\n\n";
+                                completeString +=                                        "\t\t\t\t\t" + testButtons.get(7).toString() + "\t\t" + testButtons.get(8).toString() + "\n\n";
+                            }
+                        }
                         break;
                 }
-                completeString += "\n\n";
+            }else{
+                for (int i = 0; i < size; i += iterator) {
+                    switch (iterator) {
+                        case 2://if two buttons per row
+                            completeString += "\t" + testButtons.get(i).toString() + "\t\t\t" + testButtons.get(i + 1).toString();
+                            break;
+                        case 3://if three buttons
+                            if (targLeft.equals("Left")) {//if targets on left
+                                if (targInt == 3)
+                                    completeString += "\t" + testButtons.get(i).toString() + "\t\t\t\t" + testButtons.get(i + 1).toString() + "\t\t" + testButtons.get(i + 2).toString();
+                                else
+                                    completeString += "\t" + testButtons.get(i).toString() + "\t\t" + testButtons.get(i + 1).toString() + "\t\t\t\t" + testButtons.get(i + 2).toString();
+                            } else { //if targets on right
+                                if (distInt == 6)
+                                    completeString += "\t" + testButtons.get(i).toString() + "\t\t" + testButtons.get(i + 1).toString() + "\t\t\t\t" + testButtons.get(i + 2).toString();
+                                else
+                                    completeString += "\t" + testButtons.get(i).toString() + "\t\t\t\t" + testButtons.get(i + 1).toString() + "\t\t" + testButtons.get(i + 2).toString();
+                            }
+                            break;
+                        case 4://if four buttons per row
+                            completeString += "\t" + testButtons.get(i).toString() + "\t\t" + testButtons.get(i + 1) + "\t\t\t\t" + testButtons.get(i + 2).toString() + "\t\t" + testButtons.get(i + 3).toString();
+                            break;
+                    }
+                    completeString += "\n\n";
+                }
             }
+
         } else {
             completeString = "On Intermission Slide\n";
             completeString += "Not Practice or Test Slide.\n";
@@ -1150,7 +1200,313 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
             for(int a = 0; a < testButtons.size(); a++){
                 completeString += testButtons.get(a).getClicks() + ",";
             }
-        }else{
+
+        } else if(distInt + targInt == 2 || distInt + targInt == 4 || distInt + targInt == 7){
+            //for singleton slides
+            String[] buttonOutcomes = {" "," ", ", ", ", ", "< ", "< "," < ", "< "," "};
+            for(int i = 0; i < testButtons.size(); i++){
+                buttonOutcomes[i] = testButtons.get(i).toString();
+            }
+            switch(distInt + targInt){
+                case 2:
+                    completeString += "-1,-1,-1,-1,-1,";
+                    if(buttonOutcomes[2].equals("0")){
+                        completeString += "0,";
+                    } else{
+                        completeString += "1,";
+                    }
+                    if(buttonOutcomes[3].equals("0")){
+                        completeString += "0,";
+                    }else{
+                        completeString += "1,";
+                    }
+                    completeString += "-1,-1,-1,-1,-1";
+                    break;
+                case 4:
+                    if(targLeft.equals("Left")){
+                        completeString += "-1,";
+                        if(targInt == 3){
+                            if(buttonOutcomes[0].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1,-1,";
+                            if(buttonOutcomes[2].equals("0")){
+                                completeString += "0,";
+                            } else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[3].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1,";
+                            if(buttonOutcomes[4].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1";
+                        }else{
+                            completeString += "-1,";
+                            if(buttonOutcomes[1].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1,";
+                            if(buttonOutcomes[2].equals("0")){
+                                completeString += "0,";
+                            } else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[3].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1,-1,";
+                            if(buttonOutcomes[5].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1";
+                        }
+                    }else{
+                        completeString += "-1,";
+                        if(distInt == 3){
+                            if(buttonOutcomes[0].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1,-1,";
+                            if(buttonOutcomes[2].equals("0")){
+                                completeString += "0,";
+                            } else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[3].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1,";
+                            if(buttonOutcomes[4].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1";
+                        }else{
+                            completeString += "-1,";
+                            if(buttonOutcomes[1].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1,";
+                            if(buttonOutcomes[2].equals("0")){
+                                completeString += "0,";
+                            } else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[3].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1,-1,";
+                            if(buttonOutcomes[5].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1";
+                        }
+                    }
+                    break;
+                case 7:
+                    if(targLeft.equals("Left")){
+                        if(targInt == 6){
+
+
+                            if(buttonOutcomes[0].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[1].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1,";
+                            if(buttonOutcomes[3].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[4].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[5].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,";
+                            if(buttonOutcomes[6].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[7].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1";
+
+
+                        }else{
+
+
+                            completeString +="-1,-1";
+                            if(buttonOutcomes[1].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[2].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,";
+                            if(buttonOutcomes[3].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[4].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[5].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString +="-1,-1";
+                            if(buttonOutcomes[7].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[8].equals("0")){
+                                completeString += "0";
+                            }else{
+                                completeString += "1";
+                            }
+
+
+                        }
+                    }else{
+                        if(distInt == 6){
+
+                            if(buttonOutcomes[0].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[1].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1,";
+                            if(buttonOutcomes[3].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[4].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[5].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,";
+                            if(buttonOutcomes[6].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[7].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,-1";
+
+
+                        }else{
+
+                            completeString +="-1,-1";
+                            if(buttonOutcomes[1].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[2].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString += "-1,";
+                            if(buttonOutcomes[3].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[4].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[5].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            completeString +="-1,-1";
+                            if(buttonOutcomes[7].equals("0")){
+                                completeString += "0,";
+                            }else{
+                                completeString += "1,";
+                            }
+                            if(buttonOutcomes[8].equals("0")){
+                                completeString += "0";
+                            }else{
+                                completeString += "1";
+                            }
+
+                        }
+                    }
+                    break;
+            }
+        } else{
             int prevObject = 0;
             for(int c = 0; c < testButtons.size();c++){
                 String button = testButtons.get(c).toString();
@@ -1178,7 +1534,7 @@ public class UpdatedSlide extends JLayeredPane implements MouseListener, KeyList
         }
         completeString += "\n";
 
-
+        System.out.println(System.currentTimeMillis());
         return completeString;
     }
 }
